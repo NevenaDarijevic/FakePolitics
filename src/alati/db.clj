@@ -3,7 +3,7 @@
   (:require [monger.core :as mg]
             [monger.collection :as mc])
   (:import (java.util Date)))
-
+(def articlesCollection "articles")
 
 (def db (-> "mongodb://127.0.0.1/alati-test"
             mg/connect-via-uri
@@ -20,7 +20,7 @@
 
 ;Function which creates new article
 (defn createArticle [title body]
-  (mc/insert db "articles"
+  (mc/insert db articlesCollection
              {:title   title
               :body    body
               :created (new Date)}))
@@ -30,6 +30,6 @@
 
 ;Function which returns all articles
 (defn returnAllArticles []
-  (mc/find-maps db "articles") )
+  (mc/find-maps db articlesCollection) )
 ;Testing in REPL
 ;(alati.db/returnAllArticles)
