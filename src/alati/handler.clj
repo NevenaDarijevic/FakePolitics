@@ -9,6 +9,7 @@
 
 (defroutes app-routes
   (GET "/" [] (pages/index (db/returnAllArticles)))
+   (GET "/articles/:article-id" [articleID] (pages/article {}))
   (route/not-found "Not Found"))
 
 (def app

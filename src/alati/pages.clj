@@ -12,3 +12,9 @@
 (defn index [articles]
   (basePageTemplate (for [a articles]
                       [:h2 (:title a)])))
+
+;Page for articles
+(defn article [article]
+  (basePageTemplate [:small (:created article)]
+                    [:h1 (:title article)]
+                    [:p (:body article)]))
