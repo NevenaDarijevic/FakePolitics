@@ -11,7 +11,7 @@
 ;index page which displays all articles using hiccup pages
 (defn index [articles]
   (basePageTemplate (for [a articles]
-                      [:h2 (:title a)])))
+                      [:h2 [:a {:href (str "/articles/" (:_id a))} (:title a)]])))
 
 ;Page for articles
 (defn article [article]
