@@ -43,5 +43,5 @@
 ;(alati.db/returnAllArticles)
 
 ;Function which returns article by ID
-(defn returnArticleById [articleID]
-  (mc/find-by-id db articlesCollection (ObjectId. articleID))) ;ObjectID is for importing ID
+(defn returnArticleById [article-id]
+  (mc/find-map-by-id db articlesCollection (ObjectId. article-id))) ;ObjectID is for importing ID
