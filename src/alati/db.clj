@@ -3,9 +3,15 @@
   (:require [monger.core :as mg]
             [monger.collection :as mc])
   (:import (java.util Date)))
+;Extracting collection of articles as variable because it is a good practice
 (def articlesCollection "articles")
 
-(def db (-> "mongodb://127.0.0.1/alati-test"
+;Extracting connection uri
+(def  dbConnectionUri  (or (System/getenv "alatiMongoUri")
+                         "mongodb://127.0.0.1/alati-test"))
+
+;Create a connection
+(def db (-> dbConnectionUri
             mg/connect-via-uri
             :db))
 ;REPL Insert new values into articles
