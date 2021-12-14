@@ -3,16 +3,12 @@
             [compojure.route :as route]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
             [alati.db :as db]
+            [alati.pages :as pages]
   ))
 
-;Creating of route for index page which displays all articles
-(defn index [_]
-  (->> (db/returnAllArticles)
-       (map #(str "<h2>" (:title %) "</h2>"))
-       (apply str  "<h1>Testni naslov </h1>")))
 
 (defroutes app-routes
-  (GET "/" [] index)
+  (GET "/" [] (pages/index (db/returnAllArticles)))
   (route/not-found "Not Found"))
 
 (def app
