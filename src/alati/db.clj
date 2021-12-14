@@ -2,7 +2,9 @@
 
   (:require [monger.core :as mg]
             [monger.collection :as mc])
-  (:import (java.util Date)))
+  (:import (java.util Date)
+           (org.bson.types ObjectId)))
+
 ;Extracting collection of articles as variable because it is a good practice
 (def articlesCollection "articles")
 
@@ -39,3 +41,7 @@
   (mc/find-maps db articlesCollection) )
 ;Testing in REPL
 ;(alati.db/returnAllArticles)
+
+;Function which returns article by ID
+(defn returnArticleById [articleID]
+  (mc/find-by-id db articlesCollection (ObjectId. articleID))) ;ObjectID is for importing ID
