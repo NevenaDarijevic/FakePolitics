@@ -1,7 +1,8 @@
 (ns alati.db
 
-      (:require [monger.core :as mg]
-                [monger.collection :as mc] ) )
+  (:require [monger.core :as mg]
+            [monger.collection :as mc])
+  (:import (java.util Date)))
 
 
 (def db (-> "mongodb://127.0.0.1/alati-test"
@@ -18,8 +19,17 @@
 ;  :created #inst"2021-12-14T10:38:42.738-00:00"})
 
 ;Function which creates new article
-(defn create-article [title body]
+(defn createArticle [title body]
   (mc/insert db "articles"
-             {:title title
-              :body body
-              :created (new java.util.Date)}))
+             {:title   title
+              :body    body
+              :created (new Date)}))
+
+;Testing in REPL
+;(alati.db/createArticle "TestArticle" "...")
+
+;Function which returns all articles
+(defn returnAllArticles []
+  (mc/find-maps db "articles") )
+;Testing in REPL
+;(alati.db/returnAllArticles)
