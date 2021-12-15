@@ -13,8 +13,8 @@
   (GET "/articles/:article-id" [article-id] (pages/article (db/returnArticleById article-id)))
   (GET "/articles/:article-id/edit" [article-id] (pages/editArticle (db/returnArticleById article-id)))
   (GET "/articles/new" [] (pages/editArticle nil))
-   (POST "/articles" [title body] (do (db/createArticle title body)
-                                   (response/redirect "/")           ))
+   (POST "/articles" [title body] (do (db/createArticle title body) (response/redirect "/")))
+  (POST "/articles/:art-id" [art-id title body] (do (db/updateArticle art-id title body) (response/redirect (str "/articles/" art-id))))
    (route/not-found "Not Found"))
 
 (def app
