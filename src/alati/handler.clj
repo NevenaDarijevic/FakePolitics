@@ -6,6 +6,7 @@
             [alati.pages :as pages]
             [ring.util.response :as response ]
             [ring.middleware.session :as session]
+            [alati.admin :as admin]
   ))
 
 
@@ -16,8 +17,14 @@
   (GET "/articles/new" [] (pages/editArticle nil))
    (POST "/articles" [title body] (do (db/createArticle title body) (response/redirect "/")))
   (POST "/articles/:art-id" [art-id title body] (do (db/updateArticle art-id title body) (response/redirect (str "/articles/" art-id))))
-  (GET "/admin/login" [] (pages/adminLogin))
-   (POST "/admin/login" [username password] (response/redirect "/"))
+  (GET "/admin/login" [:as {session :session}]
+    (if (:admin session)
+      (response/redirect "/")
+      (pages/adminLogin)))
+   (POST "/admin/login" [username password] (if (admin/adminLogin username password)
+                                              (-> (response/redirect "/")
+                                                  (assoc-in [:session :admin] true))
+                                              (pages/adminLogin)))
    (route/not-found "Not Found"))
 
 
