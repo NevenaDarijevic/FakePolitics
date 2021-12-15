@@ -59,8 +59,8 @@
     (form/form-to
       [:post "/admin/login"]
 
-      (form/label "login" "Login")
-      (form/text-field "login")
+      (form/label "username" "Username")
+      (form/text-field "username")
 
       (form/label "password" "Password")
       (form/password-field "password")

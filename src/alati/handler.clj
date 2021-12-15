@@ -25,6 +25,8 @@
                                               (-> (response/redirect "/")
                                                   (assoc-in [:session :admin] true))
                                               (pages/adminLogin)))
+     (GET "/admin/logout" [] (-> (response/redirect "/")
+                                       (assoc-in [:session :admin] false)))
    (route/not-found "Not Found"))
 
 
