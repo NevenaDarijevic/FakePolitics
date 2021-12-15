@@ -13,10 +13,7 @@
 (defroutes app-routes
   (GET "/" [] (pages/index (db/returnAllArticles)))
   (GET "/articles/:article-id" [article-id] (pages/article (db/returnArticleById article-id)))
-  (GET "/articles/:article-id/edit" [article-id] (pages/editArticle (db/returnArticleById article-id)))
-  (GET "/articles/new" [] (pages/editArticle nil))
-   (POST "/articles" [title body] (do (db/createArticle title body) (response/redirect "/")))
-  (POST "/articles/:art-id" [art-id title body] (do (db/updateArticle art-id title body) (response/redirect (str "/articles/" art-id))))
+
   (GET "/admin/login" [:as {session :session}]
     (if (:admin session)
       (response/redirect "/")
@@ -29,7 +26,13 @@
                                        (assoc-in [:session :admin] false)))
    (route/not-found "Not Found"))
 
-
+(defroutes adminRoutes
+           ;routes for creating new article, only admin can do it
+           (GET "/articles/new" [] (pages/editArticle nil))
+           (POST "/articles" [title body] (do (db/createArticle title body) (response/redirect "/")))
+           ;routes for editing articles, only admin can do it
+           (GET "/articles/:article-id/edit" [article-id] (pages/editArticle (db/returnArticleById article-id)))
+           (POST "/articles/:art-id" [art-id title body] (do (db/updateArticle art-id title body) (response/redirect (str "/articles/" art-id)))))
 (def app
   (-> app-routes
       (wrap-defaults site-defaults)
