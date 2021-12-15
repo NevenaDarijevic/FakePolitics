@@ -57,7 +57,7 @@
 (defn adminLogin []
   (basePageTemplate
     (form/form-to
-      [:post "/admin/login"]                                ;post request to route /admin/login
+      [:post "/admin/login"]
 
       (form/label "login" "Login")
       (form/text-field "login")
