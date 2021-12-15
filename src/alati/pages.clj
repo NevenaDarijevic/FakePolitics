@@ -1,5 +1,7 @@
 (ns alati.pages
-  (:require [hiccup.page :refer [html5]]                    ;https://github.com/weavejester/hiccup
+  (:require [hiccup.page :refer [html5]] ;https://github.com/weavejester/hiccup
+            [hiccup.form :as form]
+            [ring.util.anti-forgery :refer [anti-forgery-field]]
             ))
 
 ;Basic template for all pages, this is good practice
@@ -21,3 +23,20 @@
                     [:p (:body a)]
                     ))
 
+;Edit article or create an article if doesn't exist
+(defn editArticle [a]
+  (basePageTemplate (form/form-to
+                      [:post (if a (str "/articles/" (:_id a))
+                                        "/articles")]
+
+                      (form/label "title" "Title")
+                      (form/text-field "title" (:title a))
+
+                      (form/label "body" "Body")
+                      (form/text-area "body" (:body a))
+
+                      ;prevent attacks
+                      (anti-forgery-field)
+                      (form/submit-button "Save")
+
+                    )))
