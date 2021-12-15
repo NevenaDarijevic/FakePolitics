@@ -37,6 +37,13 @@
 ;Testing in REPL
 ;(alati.db/createArticle "TestArticle" "...")
 
+;Function which updates article
+(defn updateArticle [art-id title body]
+  (mc/update-by-id db articlesCollection (ObjectId. art-id)
+                   {$set{:title   title
+                         :body    body
+                         }}))
+
 ;Function which returns all articles
 (defn returnAllArticles []
   (mc/find-maps db articlesCollection) )
