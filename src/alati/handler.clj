@@ -33,6 +33,14 @@
            ;routes for editing articles, only admin can do it
            (GET "/articles/:article-id/edit" [article-id] (pages/editArticle (db/returnArticleById article-id)))
            (POST "/articles/:art-id" [art-id title body] (do (db/updateArticle art-id title body) (response/redirect (str "/articles/" art-id)))))
+
+;middleware for admin
+(defn wrapAdmin [handler]
+  (fn [request]
+    (if (-> request :session :admin)                        ;if user is admin
+      (handler request)                                     ;then call handler
+      (response/redirect "/admin/login")                    ;else open login page
+                                     )))
 (def app
   (-> app-routes
       (wrap-defaults site-defaults)
