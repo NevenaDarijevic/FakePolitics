@@ -22,7 +22,10 @@
 
 ;Page for articles
 (defn article [a]
-  (basePageTemplate [:small (:created a)]
+  (basePageTemplate
+                    [:a {:href (str "/articles/" (:_id a) "/edit")} "Edit article"]
+                    [:hr]
+                    [:small (:created a)]
                     [:h1 (:title a)]
                     [:p (:body a)]
                     )
