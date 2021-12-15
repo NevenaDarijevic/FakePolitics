@@ -12,10 +12,15 @@
      ;from: https://www.bootstrapcdn.com/
      [:link {:rel "stylesheet" :href "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" :integrity "sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" :crossorigin "anonymous"}]]
     [:body
-     [:a {:href "/"} [:h1 "List of all articles"]]
-     [:a {:href  "/articles/new"} "New article"]
-     [:hr]
-     body]))
+     [:div.container
+      [:nav.navbar.navbar-expand-lg.navabr-light.bd-light
+       [:a.navbar-brand {:href "/"} "List of all articles"]
+       [:div.navbar-nav.ml-auto
+        [:a.nav-item.nav-link {:href  "/articles/new"} "New article"]
+        [:a.nav-item.nav-link {:href  "/admin/login"} "LogIN"]
+        [:a.nav-item.nav-link {:href  "/admin/logout"} "LogOUT"]
+        ]]
+      body]]))
 
 ;index page which displays all articles using hiccup pages
 (defn index [articles]
