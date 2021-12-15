@@ -42,7 +42,11 @@
 ;Page for articles
 (defn article [a]
   (basePageTemplate
-                    [:a {:href (str "/articles/" (:_id a) "/edit")} "Edit article"]
+    (form/form-to [:delete (str "/articles/" (:_id a))]
+                  (anti-forgery-field)
+                  [:a.btn.btn-primary {:href (str "/articles/" (:_id a) "/edit")} "Edit"]
+                  (form/submit-button {:class "btn btn-danger"} "Delete"))
+
                     [:hr]
                     [:small (:created a)]
                     [:h1 (:title a)]
@@ -58,16 +62,17 @@
                (str "/articles/" (:_id a))
                "/articles")]
 
+      [:div.form-group
        (form/label "title" "Title")
-       (form/text-field  "title" (:title a))
+       (form/text-field {:class "form-control"} "title" (:title a))]
 
-
+      [:div.form-group
        (form/label "body" "Body")
-       (form/text-area  "body" (:body a))
+       (form/text-area {:class "form-control"}  "body" (:body a))]
 
 
       (anti-forgery-field)
-      (form/submit-button  "Save")
+      (form/submit-button {:class "btn btn-primary"} "Save")
       )
     )
   )

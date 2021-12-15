@@ -54,3 +54,7 @@
 ;Function which returns article by ID
 (defn returnArticleById [article-id]
   (mc/find-map-by-id db articlesCollection (ObjectId. article-id))) ;ObjectID is for importing ID
+
+;Delete article
+(defn deleteArticle [article-id]
+  (mc/remove-by-id db articlesCollection (ObjectId. article-id)))

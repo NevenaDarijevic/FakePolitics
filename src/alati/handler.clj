@@ -32,7 +32,9 @@
            (POST "/articles" [title body] (do (db/createArticle title body) (response/redirect "/")))
            ;routes for editing articles, only admin can do it
            (GET "/articles/:article-id/edit" [article-id] (pages/editArticle (db/returnArticleById article-id)))
-           (POST "/articles/:art-id" [art-id title body] (do (db/updateArticle art-id title body) (response/redirect (str "/articles/" art-id)))))
+           (POST "/articles/:art-id" [art-id title body] (do (db/updateArticle art-id title body) (response/redirect (str "/articles/" art-id))))
+           ;deleting article
+           (DELETE "/articles/:art-id" [art-id] (do (db/deleteArticle art-id) (response/redirect "/"))))
 
 ;middleware for admin
 (defn wrapAdmin [handler]
