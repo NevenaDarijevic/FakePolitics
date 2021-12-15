@@ -22,10 +22,22 @@
         ]]
       body]]))
 
+;mac lentght for text of every articles shown on index page as preview
+(def previewLengthForArticles 500)
+
+;private function for trimming text used on index page for previewing articles
+(defn- trimText [text] (if (> (.length text) previewLengthForArticles)
+                         (subs text 0 previewLengthForArticles)
+                         text))
+
 ;index page which displays all articles using hiccup pages
 (defn index [articles]
   (basePageTemplate (for [a articles]
-                      [:h2 [:a {:href (str "/articles/" (:_id a))} (:title a)]])))
+                      [:div
+                       [:h2 [:a {:href (str "/articles/" (:_id a))} (:title a)]]
+                       [:p (-> a :body trimText)]
+                       ]
+                     )))
 
 ;Page for articles
 (defn article [a]
