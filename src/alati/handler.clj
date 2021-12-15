@@ -42,7 +42,7 @@
       (response/redirect "/admin/login")                    ;else open login page
                                      )))
 (def app
-  (-> app-routes
+  (-> (routes (wrap-routes adminRoutes wrapAdmin)  app-routes)
       (wrap-defaults site-defaults)
       session/wrap-session) )
 
