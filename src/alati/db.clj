@@ -1,7 +1,8 @@
 (ns alati.db
 
   (:require [monger.core :as mg]
-            [monger.collection :as mc])
+            [monger.collection :as mc]
+            [monger.operators :refer [$set]])
   (:import
     [org.bson.types ObjectId]))
 
