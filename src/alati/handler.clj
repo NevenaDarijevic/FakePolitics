@@ -10,6 +10,7 @@
 (defroutes app-routes
   (GET "/" [] (pages/index (db/returnAllArticles)))
   (GET "/articles/:article-id" [article-id] (pages/article (db/returnArticleById article-id)))
+  (GET "/articles/new" [] (pages/editArticle nil))          ;when argument is nil then we create new article in function editArticle
   (route/not-found "Not Found"))
 
 (def app
