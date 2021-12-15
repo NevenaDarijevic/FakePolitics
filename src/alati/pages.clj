@@ -6,8 +6,8 @@
 (defn basePageTemplate [& body]
   (html5
     [:head [:title "Project-Articles"]]
-    [:body [:a {:href "/"}]
-     [:h1 "Articles"] body]))
+    [:body [:a {:href "/"}
+     [:h1 "List of all articles"]] body]))
 
 ;index page which displays all articles using hiccup pages
 (defn index [articles]
