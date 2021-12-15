@@ -1,9 +1,9 @@
 (ns alati.pages
-  (:require [hiccup.page :refer [html5]] ;https://github.com/weavejester/hiccup
+  (:require [hiccup.page :refer [html5]]                    ;https://github.com/weavejester/hiccup
             [hiccup.form :as form]
             [ring.util.anti-forgery :refer [anti-forgery-field]]
             )
-  )
+ )
 
 ;Basic template for all pages, this is good practice
 (defn basePageTemplate [& body]
@@ -42,7 +42,6 @@
 
 
       (anti-forgery-field)
-
       (form/submit-button  "Save")
       )
     )

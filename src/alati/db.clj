@@ -2,8 +2,9 @@
 
   (:require [monger.core :as mg]
             [monger.collection :as mc])
-  (:import (java.util Date)
-           (org.bson.types ObjectId)))
+  (:import
+    [org.bson.types ObjectId]))
+
 
 ;Extracting collection of articles as variable because it is a good practice
 (def articlesCollection "articles")
@@ -31,7 +32,7 @@
   (mc/insert db articlesCollection
              {:title   title
               :body    body
-              :created (new Date)}))
+              :created (new java.util.Date)}))
 
 ;Testing in REPL
 ;(alati.db/createArticle "TestArticle" "...")
