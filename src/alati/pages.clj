@@ -61,16 +61,20 @@
   )
 
 ;Login page
-(defn adminLogin []
+(defn adminLogin [ & [message]]
   (basePageTemplate
+    (when message [:div.alert.alert-danger message])
     (form/form-to
       [:post "/admin/login"]
 
-      (form/label "username" "Username")
-      (form/text-field "username")
+      [:div.form-group
+       (form/label "username" "Username")
+       (form/text-field {:class "form-control"} "username")]
 
-      (form/label "password" "Password")
-      (form/password-field "password")
+      [:div.form-group
+       (form/label "password" "Password")
+       (form/password-field {:class "form-control"}  "password")]
+
 
       (anti-forgery-field)
-      (form/submit-button "Login"))))
+      (form/submit-button {:class "btn btn-primary"}  "Login"))))

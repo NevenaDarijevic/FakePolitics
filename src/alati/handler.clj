@@ -21,7 +21,7 @@
    (POST "/admin/login" [username password] (if (admin/adminLogin username password)
                                               (-> (response/redirect "/")
                                                   (assoc-in [:session :admin] true))
-                                              (pages/adminLogin)))
+                                              (pages/adminLogin "INVALID USERNAME OR PASSWORD! TRY AGAIN!")))
      (GET "/admin/logout" [] (-> (response/redirect "/")
                                        (assoc-in [:session :admin] false)))
    (route/not-found "Not Found"))
