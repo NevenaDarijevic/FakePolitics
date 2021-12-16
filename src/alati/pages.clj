@@ -11,15 +11,18 @@
      ;from: https://www.bootstrapcdn.com/
      [:link {:rel "stylesheet" :href "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" :integrity "sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" :crossorigin "anonymous"}]]
     [:body
-     [:div.container
-      [:nav.navbar.navbar-expand-lg.navabr-light.bd-light
-       [:a.navbar-brand {:href "/"} "List of all articles"]
-       [:div.navbar-nav.ml-auto
-        [:a.nav-item.nav-link {:href  "/articles/new"} "New article"]
-        [:a.nav-item.nav-link {:href  "/admin/login"} "LogIN"]
-        [:a.nav-item.nav-link {:href  "/admin/logout"} "LogOUT"]
-        ]]
-      body]]))
+     [:nav.navbar.navbar-expand-sm.bg-dark.navbar-dark
+      [:div.container-fluid
+       [:ul.navbar-nav
+        [:li.nav-item
+         [:a.nav-link.active {:href "/"} "All articles"]]
+        [:li.nav-item
+         [:a.nav-link {:href "/articles/new"} "New article"]]
+        [:li.nav-item
+         [:a.nav-link {:href "/admin/login"} "Login"]]
+        [:li.nav-item
+         [:a.nav-link {:href "/admin/logout"} "Logout"]]] ]] body
+     ]))
 
 ;mac lentght for text of every articles shown on index page as preview
 (def previewLengthForArticles 500)
@@ -32,7 +35,7 @@
 ;index page which displays all articles using hiccup pages
 (defn index [articles]
   (basePageTemplate (for [a articles]
-                      [:div
+                      [ :div.container.p-5.my-5.border
                        [:h2 [:a {:href (str "/articles/" (:_id a))} (:title a)]]
                        [:p (-> a :body trimText )]
                        ]
@@ -41,17 +44,15 @@
 ;Page for articles
 (defn article [a]
   (basePageTemplate
-    (form/form-to [:delete (str "/articles/" (:_id a))]
-                  (anti-forgery-field)
-                  [:a.btn.btn-primary {:href (str "/articles/" (:_id a) "/edit")} "Edit"]
-                  (form/submit-button {:class "btn btn-danger"} "Delete"))
+    [ :div.container.p-5.my-5.border
+     (form/form-to [:delete (str "/articles/" (:_id a))]
 
-                    [:hr]
+                   (anti-forgery-field)
+                   [:a.btn.btn-primary {:href (str "/articles/" (:_id a) "/edit")} "Edit"]
+                   (form/submit-button {:class "btn btn-danger"} "Delete"))
                     [:small (:created a)]
                     [:h1 (:title a)]
-                    [:p (:body a)]
-                    )
-  )
+                    [:p (:body a)]]))
 
 ;Edit article or create an article if doesn't exist
 (defn editArticle [a]
@@ -61,17 +62,18 @@
                (str "/articles/" (:_id a))
                "/articles")]
 
-      [:div.form-group
+      [ :div.container.p-5.my-5.border
        (form/label "title" "Title")
-       (form/text-field {:class "form-control"} "title" (:title a))]
+       (form/text-field {:class "form-control"} "title" (:title a))
+       [:br]
 
-      [:div.form-group
        (form/label "body" "Body")
-       (form/text-area {:class "form-control"}  "body" (:body a))]
+       (form/text-area {:class "form-control"}  "body" (:body a))
 
-
+       [:br]
+       [:br]
       (anti-forgery-field)
-      (form/submit-button {:class "btn btn-primary"} "Save")
+      (form/submit-button {:class "btn btn-primary"} "Save")]
       )
     )
   )
@@ -83,14 +85,15 @@
     (form/form-to
       [:post "/admin/login"]
 
-      [:div.form-group
-       (form/label "username" "Username")
-       (form/text-field {:class "form-control"} "username")]
 
-      [:div.form-group
-       (form/label "password" "Password")
-       (form/password-field {:class "form-control"}  "password")]
-
-
-      (anti-forgery-field)
-      (form/submit-button {:class "btn btn-primary"}  "Login"))))
+      [:div.container.p-5.my-5.border
+       [:label.form-label {:for "email"} "Email:"]
+       [:input#email.form-control {:type "username" :placeholder "Enter username" :name "username"}]
+       [:label.form-label {:for "pwd"} "Password:"]
+       [:input#pwd.form-control {:type "password" :placeholder "Enter password" :name "password"}]
+       [:div.form-check.mb-3
+        [:label.form-check-label
+         [:input.form-check-input {:type "checkbox" :name "remember"}] "Remember me"]]
+       (anti-forgery-field)
+       (form/submit-button {:class "btn btn-primary"}  "Login")]
+)))
