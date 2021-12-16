@@ -18,7 +18,7 @@ To start a web server for the application, run:
 
 Daniel Higginbotham (2015), [Clojure for the Brave and True][] 
 
-[Clojure for the Brave and True] https://www.braveclojure.com/clojure-for-the-brave-and-true/
+[Clojure for the Brave and True]: https://www.braveclojure.com/clojure-for-the-brave-and-true/
 
 ## License
 
