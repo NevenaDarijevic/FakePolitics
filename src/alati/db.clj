@@ -1,5 +1,5 @@
 (ns alati.db
-
+  ;Guide: http://clojuremongodb.info/articles/getting_started.html
   (:require [monger.core :as mg]
             [monger.collection :as mc]
             [monger.operators :refer [$set]])

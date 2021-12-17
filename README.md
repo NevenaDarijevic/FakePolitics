@@ -1,15 +1,18 @@
-# Project for faculty
+# Political news
 
-Blog
 
-The application uses following libraries:
--[Compojure][]
--[Ring][]
--[Monger][]
--[Hiccup][]
+This website contains political articles from various portals. Admin can create, edit and delete articles. Readers are allowed to search for articles according to the portals from which they were downloaded, as well as to leave comments.
+
+
+
 ## Prerequisites
 
 You will need [Leiningen][] 2.0.0 or above installed.
+The application uses following libraries:/
+-[Compojure][]/
+-[Ring][]/
+-[Monger][]/
+-[Hiccup][]/
 
 [leiningen]: https://github.com/technomancy/leiningen
 [compojure]: https://github.com/weavejester/compojure
@@ -22,6 +25,12 @@ You will need [Leiningen][] 2.0.0 or above installed.
 To start a web server for the application, run:
 
     lein ring server
+
+##References
+
+Daniel Higginbotham (2015), [Clojure for the Brave and True][]
+
+[clojure for the Brave and True]: https://www.braveclojure.com/clojure-for-the-brave-and-true/ 
 
 ## License
 
