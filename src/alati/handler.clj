@@ -29,10 +29,11 @@
 (defroutes adminRoutes
            ;routes for creating new article, only admin can do it
            (GET "/articles/new" [] (pages/editArticle nil))
-           (POST "/articles" [title body] (do (db/createArticle title body) (response/redirect "/")))
+           (POST "/articles" [title body created author portal tag
+                              ] (do (db/createArticle title body created author portal tag) (response/redirect "/")))
            ;routes for editing articles, only admin can do it
            (GET "/articles/:article-id/edit" [article-id] (pages/editArticle (db/returnArticleById article-id)))
-           (POST "/articles/:art-id" [art-id title body] (do (db/updateArticle art-id title body) (response/redirect (str "/articles/" art-id))))
+           (POST "/articles/:art-id" [art-id title body author portal tag] (do (db/updateArticle art-id title body author portal tag) (response/redirect (str "/articles/" art-id))))
            ;deleting article
            (DELETE "/articles/:art-id" [art-id] (do (db/deleteArticle art-id) (response/redirect "/"))))
 

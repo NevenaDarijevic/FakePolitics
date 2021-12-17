@@ -1,7 +1,7 @@
 (ns alati.pages
   (:require [hiccup.page :refer [html5]]
             [hiccup.form :as form]
-
+            [alati.db :as db]
             [ring.util.anti-forgery :refer [anti-forgery-field]]))
 
 ;Basic template for all pages, this is good practice
@@ -52,7 +52,13 @@
                    (form/submit-button {:class "btn btn-danger"} "Delete"))
                     [:small (:created a)]
                     [:h1 (:title a)]
-                    [:p (:body a)]]))
+                    [:p (:body a)]
+     [:small (:author a)]
+     [:br]
+     [:small ((db/findPortalById (:portal a)) :name)]
+     [:br]
+     [:small (:tag a)]
+     ]))
 
 ;Edit article or create an article if doesn't exist
 (defn editArticle [a]
@@ -69,7 +75,15 @@
 
        (form/label "body" "Body")
        (form/text-area {:class "form-control"}  "body" (:body a))
+       (form/label "author" "Author")
+       (form/text-area {:class "form-control"}  "author" (:author a))
+       [:br]
+       (form/label "portal" "Portal")
 
+       (form/text-area {:class "form-control"}  "portal" ((db/findPortalById (:portal a)) :name))
+       [:br]
+       (form/label "tag" "tag")
+       (form/text-area {:class "form-control"}  "tag" (:tag a))
        [:br]
        [:br]
       (anti-forgery-field)

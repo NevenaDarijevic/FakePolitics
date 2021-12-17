@@ -9,7 +9,8 @@
 
 ;Extracting collection of articles as variable because it is a good practice
 (def articlesCollection "articles")
-
+(def portalsCollection  "portals")
+(def commentsCollection  "comments")
 ;Extracting connection uri
 (def  dbConnectionUri  (or (System/getenv "alatiMongoUri")
                          "mongodb://127.0.0.1/alati-test"))
@@ -29,20 +30,26 @@
 ;  :created #inst"2021-12-14T10:38:42.738-00:00"})
 
 ;Function which creates new article
-(defn createArticle [title body]
+(defn createArticle [title body created author portal tag]
   (mc/insert db articlesCollection
              {:title   title
               :body    body
-              :created (new java.util.Date)}))
+              :created created
+              :author author
+              :portal portal
+              :tag tag}))
 
 ;Testing in REPL
 ;(alati.db/createArticle "TestArticle" "...")
 
 ;Function which updates article
-(defn updateArticle [art-id title body]
+(defn updateArticle [art-id title body author portal tag]
   (mc/update-by-id db articlesCollection (ObjectId. art-id)
                    {$set{:title   title
                          :body    body
+                         :author author
+                         :portal portal
+                         :tag tag
                          }}))
 
 ;Function which returns all articles
@@ -58,3 +65,6 @@
 ;Delete article
 (defn deleteArticle [article-id]
   (mc/remove-by-id db articlesCollection (ObjectId. article-id)))
+
+(defn findPortalById [portal-id]
+  (mc/find-map-by-id db portalsCollection (ObjectId. portal-id)))
