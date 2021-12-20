@@ -63,9 +63,12 @@
     [:div.container.p-5.my-5.border
      ;comments
      [:h5 (str "Comments")]
-     (def listOfComments (into '() (db/findCommentsByArticleId (:_id a))))
-     ; [:small (.get (.get (into '() (db/findCommentsByArticleId (:_id a)) 0)) :user)]
 
+     [:a.btn.btn-primary {:href (str "/comments/" (:_id a) "/newcomment")} "New comment"]
+     ; [:small alati.pages/printComments (db/findCommentsByArticleId (:_id a))]
+     ; [:small (.get (.get (into '() (db/findCommentsByArticleId (:_id a)) 0)) :user)]
+      [:p (for [c (db/findCommentsByArticleId (:_id a))]
+                ( str "Reader " (get c :user) " write comment: " (get c :text)  ))]
      ]))
 
 (defn displayComment [comment]
@@ -108,6 +111,25 @@
        (form/label "tag" "Tag")
        (form/drop-down {:class "form-control"} "tag" [["True" "true"] ["False" "false"]] (:tag a))
        [:br]
+       [:br]
+       (anti-forgery-field)
+       (form/submit-button {:class "btn btn-primary"} "Save")]
+      )
+    )
+  )
+
+(defn addComment [c article-id]                                        ; i need for which article
+  (basePageTemplate
+    (form/form-to
+      [:post (if c
+               (str "/comments" )
+               (str "/comments"))]
+      [:div.container.p-5.my-5.border
+       (form/label "user" "User")
+       (form/text-field {:class "form-control"} "user" (:user c))
+       [:br]
+       (form/label "text" "Text")
+       (form/text-area {:class "form-control"} "text" (:text c))
        [:br]
        (anti-forgery-field)
        (form/submit-button {:class "btn btn-primary"} "Save")]

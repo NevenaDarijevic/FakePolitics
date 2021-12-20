@@ -11,25 +11,31 @@
 
 
 (defroutes app-routes
-  (GET "/" [] (pages/index (db/returnAllArticles)))
-  (GET "/articles/:article-id" [article-id] (pages/article (db/returnArticleById article-id)))
+           (GET "/" [] (pages/index (db/returnAllArticles)))
+           (GET "/articles/:article-id" [article-id] (pages/article (db/returnArticleById article-id)))
 
-  (GET "/admin/login" [:as {session :session}]
-    (if (:admin session)
-      (response/redirect "/")
-      (pages/adminLogin)))
-   (POST "/admin/login" [username password] (if (admin/adminLogin username password)
-                                              (-> (response/redirect "/")
-                                                  (assoc-in [:session :admin] true))
-                                              (pages/adminLogin "INVALID USERNAME OR PASSWORD! TRY AGAIN!")))
-     (GET "/admin/logout" [] (-> (response/redirect "/")
+           (GET "/admin/login" [:as {session :session}]
+             (if (:admin session)
+               (response/redirect "/")
+               (pages/adminLogin)))
+           (POST "/admin/login" [username password] (if (admin/adminLogin username password)
+                                                      (-> (response/redirect "/")
+                                                          (assoc-in [:session :admin] true))
+                                                      (pages/adminLogin "INVALID USERNAME OR PASSWORD! TRY AGAIN!")))
+           (GET "/admin/logout" [] (-> (response/redirect "/")
                                        (assoc-in [:session :admin] false)))
-   (route/not-found "Not Found"))
+
+           ;  (GET "/comments/new" [] (pages/addComment nil ))
+           (GET "/comments/:article-id/newcomment" [article-id] (pages/addComment nil article-id)) ;opens ok
+           (POST "/comments" [user article-id text ] (do (db/createComment user article-id text) (response/redirect "/")))
+           (POST "/comments/:article-id" [user article-id text] (do (db/createComment user article-id text) (response/redirect "/articles/:article-id/edit")))
+
+           (route/not-found "Not Found"))
 
 (defroutes adminRoutes
            ;routes for creating new article, only admin can do it
            (GET "/articles/new" [] (pages/editArticle nil))
-           (POST "/articles" [title body created author portal tag
+           (POST "/articles" [title body  author portal tag
                               ] (do (db/createArticle title body author portal tag) (response/redirect "/")))
            ;routes for editing articles, only admin can do it
            (GET "/articles/:article-id/edit" [article-id] (pages/editArticle (db/returnArticleById article-id)))

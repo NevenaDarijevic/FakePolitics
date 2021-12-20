@@ -40,6 +40,12 @@
               :portal  portal
               :tag     tag}))
 
+(defn createComment [user article text ]
+  (mc/insert db commentsCollection
+             {:user   user
+              :article    article
+              :text text}))
+
 ;Testing in REPL
 ;(alati.db/createArticle "TestArticle" "...")
 
