@@ -121,8 +121,8 @@
 (defn addComment [c article-id]                                        ; i need for which article
   (basePageTemplate
     (form/form-to
-      [:post (if c
-               (str "/comments" )
+      [:post (if article-id
+               (str "/comments/" article-id )
                (str "/comments"))]
       [:div.container.p-5.my-5.border
        (form/label "user" "User")

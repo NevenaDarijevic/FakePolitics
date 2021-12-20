@@ -28,7 +28,7 @@
            ;  (GET "/comments/new" [] (pages/addComment nil ))
            (GET "/comments/:article-id/newcomment" [article-id] (pages/addComment nil article-id)) ;opens ok
            (POST "/comments" [user article-id text ] (do (db/createComment user article-id text) (response/redirect "/")))
-           (POST "/comments/:article-id" [user article-id text] (do (db/createComment user article-id text) (response/redirect "/articles/:article-id/edit")))
+           (POST "/comments/:article-id" [user article-id text] (do (db/createComment user article-id text) (response/redirect "/")))
 
            (route/not-found "Not Found"))
 
