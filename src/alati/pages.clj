@@ -33,7 +33,7 @@
                          text))
 
 ;index page which displays all articles using hiccup pages
-(defn index [articles]
+(defn index1 [articles]
   (basePageTemplate (for [a articles]
                       [ :div.container.p-5.my-5.border
                        [:h2 [:a {:href (str "/articles/" (:_id a))} (:title a)]]
@@ -41,6 +41,63 @@
                        ]
                      )))
 
+(defn index [articles]
+  (basePageTemplate
+                     [:nav.navbar.navbar-expand-sm.bg-dark.navbar-dark
+                      [:div.container-fluid
+                       [:ul.navbar-nav
+                        [:li.nav-item
+                         [:a.nav-link.active {:href "/"} "Show all articles"]]
+                        [:li.nav-item
+                         [:a.nav-link {:href "/truenews"} "Show true articles"]]
+                        [:li.nav-item
+                         [:a.nav-link {:href "/fakenews"} "Show fake articles"]]
+                       ] ]]
+                    (for [a articles]
+                      [ :div.container.p-5.my-5.border
+                       [:h2 [:a {:href (str "/articles/" (:_id a))} (:title a)]]
+                       [:p (-> a :body trimText )]
+                       ]
+                      )))
+
+
+(defn onlyTrueNews [articles]   ;as paramether filtered list
+  (basePageTemplate   [:nav.navbar.navbar-expand-sm.bg-dark.navbar-dark
+                       [:div.container-fluid
+                        [:ul.navbar-nav
+                         [:li.nav-item
+                          [:a.nav-link.active {:href "/"} "Show all articles"]]
+                         [:li.nav-item
+                          [:a.nav-link.active {:href "/articles/truenews"} "Show true articles"]]
+                         [:li.nav-item
+                          [:a.nav-link.active {:href "/articles/fakenews"} "Show fake articles"]]
+                         ] ]]
+                     (for [a articles]
+                       [ :div.container.p-5.my-5.border
+                        [:h2 [:a {:href (str "/articles/" (:_id a))} (:title a)]]
+                        [:p (-> a :body trimText )]
+                        ]
+                       )
+                     ))
+
+(defn onlyFakeNews [articles]                               ;as paramether filtered list
+  (basePageTemplate   [:nav.navbar.navbar-expand-sm.bg-dark.navbar-dark
+                       [:div.container-fluid
+                        [:ul.navbar-nav
+                         [:li.nav-item
+                          [:a.nav-link.active {:href "/"} "Show all articles"]]
+                         [:li.nav-item
+                          [:a.nav-link.active {:href "/truenews"} "Show true articles"]]
+                         [:li.nav-item
+                          [:a.nav-link.active {:href "/fakenews"} "Show fake articles"]]
+                         ] ]]
+                     (for [a articles]
+                       [ :div.container.p-5.my-5.border
+                        [:h2 [:a {:href (str "/articles/" (:_id a))} (:title a)]]
+                        [:p (-> a :body trimText )]
+                        ]
+                       )
+                     ))
 ;Page for articles
 (defn article [a]
   (basePageTemplate
@@ -67,17 +124,31 @@
      [:a.btn.btn-primary {:href (str "/comments/" (:_id a) "/newcomment")} "New comment"]
      ; [:small alati.pages/printComments (db/findCommentsByArticleId (:_id a))]
      ; [:small (.get (.get (into '() (db/findCommentsByArticleId (:_id a)) 0)) :user)]
-      [:p (for [c (db/findCommentsByArticleId (:_id a))]
-                ( str "Reader " (get c :user) " write comment: " (get c :text)  ))]
+
+
+     ;[:small (for [c (db/findCommentsByArticleId (:_id a))]
+     ;               (str "Reader " (get c :user) " write comment: " (get c :text))
+     ;               )]
+
+
      ]))
 
-(defn displayComment [comment]
-  [:small (comment :user)]
-  [:small (comment :created)]
-  [:small (comment :text)]
+;Some repl testing
+;(get (into [] (for [c (alati.db/findCommentsByArticleId "61c0955dbc538430a4acda76")]
+;       ( str "Reader:" (get c :user )" write comment: " (get c :text) ))) 0)
+;=> "Reader:Nikolina Maric write comment: I don't like this post"
+
+;(for [c (alati.db/findCommentsByArticleId "61c0955dbc538430a4acda76")]
+;  ( str "Reader:" (get c :user )" write comment: " (get c :text) ))
+;=> ("Reader:Nikolina Maric write comment: I don't like this post" "Reader:Maja Nikolic write comment: I like this post")
+(defn- displayComment [comment]
+  (
+   [:div.container.p-5.my-5.border
+    [:small (comment :user)]
+  [:small (comment :text)]])
   )
 
-(defn printComments [collection]
+(defn- printComments [collection]
   (displayComment (first collection))
   (if (empty? collection)
     (print-str " ")

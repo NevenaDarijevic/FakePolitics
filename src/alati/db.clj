@@ -83,4 +83,10 @@
   (mc/find-maps db commentsCollection { :article article-id }) ;return lazy seq of maps
   )
 
+(defn findTrueNews []
+  (mc/find-maps db articlesCollection {:tag "true"} )) ;return lazy seq of maps)
+
+(defn findFakeNews []
+  (mc/find-maps db articlesCollection  {:tag "false"} )) ;return lazy seq of maps)
+
 
