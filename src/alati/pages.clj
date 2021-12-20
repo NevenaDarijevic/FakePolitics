@@ -10,12 +10,12 @@
     [:head [:title "Project-Articles"]
      ;from: https://www.bootstrapcdn.com/
      [:link {:rel "stylesheet" :href "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" :integrity "sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" :crossorigin "anonymous"}]]
-    [:body
+    [:body {:style "background-color:#BBFBF7"}
      [:nav.navbar.navbar-expand-sm.bg-dark.navbar-dark
       [:div.container-fluid
        [:ul.navbar-nav
         [:li.nav-item
-         [:a.nav-link.active {:href "/"} "All articles"]]
+         [:a.nav-link.active {:href "/"} "Home page"]]
         [:li.nav-item
          [:a.nav-link {:href "/articles/new"} "New article"]]
         [:li.nav-item
@@ -43,16 +43,26 @@
 
 (defn index [articles]
   (basePageTemplate
-                     [:nav.navbar.navbar-expand-sm.bg-dark.navbar-dark
+                     [:nav.navbar.navbar-expand-sm.bg-light.navbar-light
                       [:div.container-fluid
                        [:ul.navbar-nav
                         [:li.nav-item
-                         [:a.nav-link.active {:href "/"} "Show all articles"]]
+                         [:a.nav-link.active {:href "/"} "All articles"]]
                         [:li.nav-item
-                         [:a.nav-link {:href "/truenews"} "Show true articles"]]
+                         [:a.nav-link {:href "/truenews"} "True articles"]]
                         [:li.nav-item
-                         [:a.nav-link {:href "/fakenews"} "Show fake articles"]]
-                       ] ]]
+                         [:a.nav-link {:href "/fakenews"} "Fake articles"]]
+                       ] ]
+                      [:form.form-inline
+                                            (form/label "search" "Articles from portal:")
+                                             ;[:input.form-control.mr-sm-2 {:type "search" :placeholder "Search" :aria-label "Search"}]
+                                             [:input {:type "text" :placeholder "Enter portal for search"}]
+                                             [:br]
+                                             (form/submit-button {:class "btn btn-primary"} "Search") ]
+
+
+
+                      ]
                     (for [a articles]
                       [ :div.container.p-5.my-5.border
                        [:h2 [:a {:href (str "/articles/" (:_id a))} (:title a)]]
@@ -62,15 +72,15 @@
 
 
 (defn onlyTrueNews [articles]   ;as paramether filtered list
-  (basePageTemplate   [:nav.navbar.navbar-expand-sm.bg-dark.navbar-dark
+  (basePageTemplate   [:nav.navbar.navbar-expand-sm.bg-secondary.navbar-light
                        [:div.container-fluid
                         [:ul.navbar-nav
                          [:li.nav-item
-                          [:a.nav-link.active {:href "/"} "Show all articles"]]
+                          [:a.nav-link.active {:href "/"} "All articles"]]
                          [:li.nav-item
-                          [:a.nav-link.active {:href "/articles/truenews"} "Show true articles"]]
+                          [:a.nav-link.active {:href "/truenews"} "True articles"]]
                          [:li.nav-item
-                          [:a.nav-link.active {:href "/articles/fakenews"} "Show fake articles"]]
+                          [:a.nav-link.active {:href "/fakenews"} "Fake articles"]]
                          ] ]]
                      (for [a articles]
                        [ :div.container.p-5.my-5.border
@@ -81,15 +91,15 @@
                      ))
 
 (defn onlyFakeNews [articles]                               ;as paramether filtered list
-  (basePageTemplate   [:nav.navbar.navbar-expand-sm.bg-dark.navbar-dark
+  (basePageTemplate   [:nav.navbar.navbar-expand-sm.bg-secondary.navbar-light
                        [:div.container-fluid
                         [:ul.navbar-nav
                          [:li.nav-item
-                          [:a.nav-link.active {:href "/"} "Show all articles"]]
+                          [:a.nav-link.active {:href "/"} "All articles"]]
                          [:li.nav-item
-                          [:a.nav-link.active {:href "/truenews"} "Show true articles"]]
+                          [:a.nav-link.active {:href "/truenews"} "True articles"]]
                          [:li.nav-item
-                          [:a.nav-link.active {:href "/fakenews"} "Show fake articles"]]
+                          [:a.nav-link.active {:href "/fakenews"} "Fake articles"]]
                          ] ]]
                      (for [a articles]
                        [ :div.container.p-5.my-5.border
@@ -110,12 +120,13 @@
                     [:small (:created a)]
                     [:h1 (:title a)]
                     [:p (:body a)]
-     [:small (:author a)]
+     [:small (str "Author: " (:author a)) ]
      [:br]
      ;[:small ((db/findPortalById (:portal a)) :name)]
-     [:small (:portal a)]
+     [:small (str "Portal: " (:portal a)) ]
      [:br]
-     [:small (:tag a)]
+     [:small (str "Tag: " (:tag a)) ]
+     [:br]
      ]
     [:div.container.p-5.my-5.border
      ;comments
@@ -126,9 +137,9 @@
      ; [:small (.get (.get (into '() (db/findCommentsByArticleId (:_id a)) 0)) :user)]
 
 
-     ;[:small (for [c (db/findCommentsByArticleId (:_id a))]
-     ;               (str "Reader " (get c :user) " write comment: " (get c :text))
-     ;               )]
+     [:small (for [c (db/findCommentsByArticleId (:_id a))]
+              (str "Reader " (get c :user) " write comment: " (get c :text)))
+     ]
 
 
      ]))
