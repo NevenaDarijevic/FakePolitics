@@ -55,7 +55,7 @@
                     [:p (:body a)]
      [:small (:author a)]
      [:br]
-     ; [:small ((db/findPortalById (:portal a)) :name)]
+     ;[:small ((db/findPortalById (:portal a)) :name)]
      [:small (:portal a)]
      [:br]
      [:small (:tag a)]
@@ -63,12 +63,22 @@
     [:div.container.p-5.my-5.border
      ;comments
      [:h5 (str "Comments")]
-     (def sizeComments (count (db/findCommentsByArticleId (:_id a))))
-     (for [x (range sizeComments)]
-       (:small (.get (.get (into '() (db/findCommentsByArticleId (:_id a))) x) :user)
-          )
-       (:small sizeComments))
+     (def listOfComments (into '() (db/findCommentsByArticleId (:_id a))))
+     ; [:small (.get (.get (into '() (db/findCommentsByArticleId (:_id a)) 0)) :user)]
+
      ]))
+
+(defn displayComment [comment]
+  [:small (comment :user)]
+  [:small (comment :created)]
+  [:small (comment :text)]
+  )
+
+(defn printComments [collection]
+  (displayComment (first collection))
+  (if (empty? collection)
+    (print-str " ")
+    (printComments  (rest collection))))
 
 ;Edit article or create an article if doesn't exist
 (defn editArticle [a]
@@ -89,11 +99,12 @@
        (form/text-area {:class "form-control"}  "author" (:author a))
        [:br]
        (form/label "portal" "Portal")
+       ; (form/drop-down {:class "form-control"}  "portal" [["True" "true"] ["False" "false"]])
        (form/text-area {:class "form-control"}  "portal" (:portal a))
        ;(form/text-area {:class "form-control"}  "portal" ((db/findPortalById (:portal a)) :name))
        [:br]
-       (form/label "tag" "tag")
-       (form/text-area {:class "form-control"}  "tag" (:tag a))
+       (form/label "tag" "Tag")
+       (form/drop-down {:class "form-control"}  "tag" [["True" "true"] ["False" "false"]] (:tag a))
        [:br]
        [:br]
       (anti-forgery-field)
