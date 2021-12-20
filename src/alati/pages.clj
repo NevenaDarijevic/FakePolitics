@@ -55,9 +55,19 @@
                     [:p (:body a)]
      [:small (:author a)]
      [:br]
-     [:small ((db/findPortalById (:portal a)) :name)]
+     ; [:small ((db/findPortalById (:portal a)) :name)]
+     [:small (:portal a)]
      [:br]
      [:small (:tag a)]
+     ]
+    [:div.container.p-5.my-5.border
+     ;comments
+     [:h5 (str "Comments")]
+     (def sizeComments (count (db/findCommentsByArticleId (:_id a))))
+     (for [x (range sizeComments)]
+       (:small (.get (.get (into '() (db/findCommentsByArticleId (:_id a))) x) :user)
+          )
+       (:small sizeComments))
      ]))
 
 ;Edit article or create an article if doesn't exist
@@ -79,8 +89,8 @@
        (form/text-area {:class "form-control"}  "author" (:author a))
        [:br]
        (form/label "portal" "Portal")
-
-       (form/text-area {:class "form-control"}  "portal" ((db/findPortalById (:portal a)) :name))
+       (form/text-area {:class "form-control"}  "portal" (:portal a))
+       ;(form/text-area {:class "form-control"}  "portal" ((db/findPortalById (:portal a)) :name))
        [:br]
        (form/label "tag" "tag")
        (form/text-area {:class "form-control"}  "tag" (:tag a))

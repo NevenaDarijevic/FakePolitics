@@ -68,3 +68,9 @@
 
 (defn findPortalById [portal-id]
   (mc/find-map-by-id db portalsCollection (ObjectId. portal-id)))
+
+(defn findCommentsByArticleId [article-id]
+  (mc/find-maps db commentsCollection { :article article-id }) ;return lazy seq of maps
+  )
+
+
