@@ -88,27 +88,29 @@
                (str "/articles/" (:_id a))
                "/articles")]
 
-      [ :div.container.p-5.my-5.border
+      [:div.container.p-5.my-5.border
        (form/label "title" "Title")
        (form/text-field {:class "form-control"} "title" (:title a))
        [:br]
 
        (form/label "body" "Body")
-       (form/text-area {:class "form-control"}  "body" (:body a))
+       (form/text-area {:class "form-control"} "body" (:body a))
        (form/label "author" "Author")
-       (form/text-area {:class "form-control"}  "author" (:author a))
+       (form/text-area {:class "form-control"} "author" (:author a))
        [:br]
        (form/label "portal" "Portal")
-       ; (form/drop-down {:class "form-control"}  "portal" [["True" "true"] ["False" "false"]])
-       (form/text-area {:class "form-control"}  "portal" (:portal a))
+
+       (form/drop-down {:class "form-control"} "portal" (into [] (for [p (alati.db/returnAllPortals)]
+                                                                   (get p :name ) )))
+       ;(form/text-area {:class "form-control"} "portal" (:portal a))
        ;(form/text-area {:class "form-control"}  "portal" ((db/findPortalById (:portal a)) :name))
        [:br]
        (form/label "tag" "Tag")
-       (form/drop-down {:class "form-control"}  "tag" [["True" "true"] ["False" "false"]] (:tag a))
+       (form/drop-down {:class "form-control"} "tag" [["True" "true"] ["False" "false"]] (:tag a))
        [:br]
        [:br]
-      (anti-forgery-field)
-      (form/submit-button {:class "btn btn-primary"} "Save")]
+       (anti-forgery-field)
+       (form/submit-button {:class "btn btn-primary"} "Save")]
       )
     )
   )

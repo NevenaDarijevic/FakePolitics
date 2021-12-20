@@ -4,7 +4,8 @@
             [monger.collection :as mc]
             [monger.operators :refer [$set]])
   (:import
-    [org.bson.types ObjectId]))
+    [org.bson.types ObjectId]
+    (java.util Date)))
 
 
 ;Extracting collection of articles as variable because it is a good practice
@@ -30,14 +31,14 @@
 ;  :created #inst"2021-12-14T10:38:42.738-00:00"})
 
 ;Function which creates new article
-(defn createArticle [title body created author portal tag]
+(defn createArticle [title body author portal tag]
   (mc/insert db articlesCollection
              {:title   title
               :body    body
-              :created created
-              :author author
-              :portal portal
-              :tag tag}))
+              :created (new Date)
+              :author  author
+              :portal  portal
+              :tag     tag}))
 
 ;Testing in REPL
 ;(alati.db/createArticle "TestArticle" "...")
@@ -68,8 +69,10 @@
 
 (defn findPortalById [portal-id]
   (mc/find-map-by-id db portalsCollection (ObjectId. portal-id)))
+
 (defn returnAllPortals []
   (mc/find-maps db portalsCollection)  )
+
 (defn findCommentsByArticleId [article-id]
   (mc/find-maps db commentsCollection { :article article-id }) ;return lazy seq of maps
   )

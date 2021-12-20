@@ -7,17 +7,17 @@ services:
       - alati-nw
     volumes:
       - db-data:/data/db
-  alati:
+  project:
     image: alati
     ports:
-      - 80:9999
+      - 80:8888
     networks:
       - alati-nw
     environment:
-      articlesBlogPORT: 9999
-      alatiMongoUri: mongodb://mongo/alati
-      alatiAdminLoginUsername: admin
-      alatiAdminLoginPassword: admin
+        articlesBlogPORT:8888
+        alatiMongoUri: mongodb://mongo/alati
+        alatiAdminLoginUsername: admin
+        alatiAdminLoginPassword: admin
 
 networks:
   alati-nw:
