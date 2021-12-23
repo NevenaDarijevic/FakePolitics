@@ -16,7 +16,6 @@
            (GET "/truenews" [] (pages/onlyTrueNews (db/findTrueNews)))
            (GET "/fakenews" [] (pages/onlyFakeNews (db/findFakeNews)))
            (GET "/articles/:article-id" [article-id] (pages/article (db/returnArticleById article-id)))
-
            (GET "/admin/login" [:as {session :session}]
              (if (:admin session)
                (response/redirect "/")
@@ -44,7 +43,8 @@
            (GET "/articles/:article-id/edit" [article-id] (pages/editArticle (db/returnArticleById article-id)))
            (POST "/articles/:art-id" [art-id title body author portal tag] (do (db/updateArticle art-id title body author portal tag) (response/redirect (str "/articles/" art-id))))
            ;deleting article
-           (DELETE "/articles/:art-id" [art-id] (do (db/deleteArticle art-id) (response/redirect "/"))))
+           (DELETE "/articles/:art-id" [art-id] (do (db/deleteArticle art-id) (response/redirect "/")))
+           (GET "/blogstatistics" [] (pages/blogstatistics)))
 
 ;middleware for admin
 (defn wrapAdmin [handler]

@@ -2,7 +2,8 @@
   (:require [hiccup.page :refer [html5]]
             [hiccup.form :as form]
             [alati.db :as db]
-            [ring.util.anti-forgery :refer [anti-forgery-field]]))
+            [ring.util.anti-forgery :refer [anti-forgery-field]]
+            [hiccup.page :refer [html5 include-css include-js]]))
 
 ;Basic template for all pages, this is good practice
 (defn basePageTemplate [& body]
@@ -21,8 +22,58 @@
         [:li.nav-item
          [:a.nav-link {:href "/admin/login"} "Login"]]
         [:li.nav-item
-         [:a.nav-link {:href "/admin/logout"} "Logout"]]] ]] body
+         [:a.nav-link {:href "/admin/logout"} "Logout"]]] ]]
+     [:nav.navbar.navbar-expand-sm.bg-light.navbar-light
+      [:div.container-fluid
+       [:ul.navbar-nav
+        [:li.nav-item
+         [:a.nav-link.active {:href "/"} "All articles"]]
+        [:li.nav-item
+         [:a.nav-link.active {:href "/truenews"} "True articles"]]
+        [:li.nav-item
+         [:a.nav-link.active {:href "/fakenews"} "Fake articles"]]
+        [:li.nav-item
+         [:a.nav-link {:href "/blogstatistics"} "Blog statistics"]]
+        ] ]
+      ]body
      ]))
+
+(defn blogstatistics []
+  (basePageTemplate
+
+    [:table {:border "1" :width "100%"} 
+   [:tr
+    [:th "Statistic"]
+    [:th "Number"]
+   ]
+   [:tr
+    [:td  "Number of articles"]
+    [:td (db/countArticles)]
+   ]
+   [:tr
+    [:td "Number of articles from BLIC portal:"]
+    [:td (db/countArticlesFromPortal "Blic")]
+    ]
+   [:tr
+    [:td "Number of articles from POLITIKA portal:"]
+    [:td (db/countArticlesFromPortal "Politika")]
+    ]
+   [:tr
+    [:td "Number of articles from RTS portal:"]
+    [:td (db/countArticlesFromPortal "Rts")]
+    ]
+   [:tr
+    [:td "Number of TRUE articles (TRUE NEWS) :"]
+    [:td (db/countTrueArticles)]
+    ]
+   [:tr
+       [:td "Number of FALSE articles (FAKE NEWS) :"]
+       [:td (db/countFakeArticles)]
+       ]
+
+
+
+   ]))
 
 ;mac lentght for text of every articles shown on index page as preview
 (def previewLengthForArticles 500)
@@ -33,36 +84,8 @@
                          text))
 
 ;index page which displays all articles using hiccup pages
-(defn index1 [articles]
-  (basePageTemplate (for [a articles]
-                      [ :div.container.p-5.my-5.border
-                       [:h2 [:a {:href (str "/articles/" (:_id a))} (:title a)]]
-                       [:p (-> a :body trimText )]
-                       ]
-                     )))
-
 (defn index [articles]
   (basePageTemplate
-                     [:nav.navbar.navbar-expand-sm.bg-light.navbar-light
-                      [:div.container-fluid
-                       [:ul.navbar-nav
-                        [:li.nav-item
-                         [:a.nav-link.active {:href "/"} "All articles"]]
-                        [:li.nav-item
-                         [:a.nav-link {:href "/truenews"} "True articles"]]
-                        [:li.nav-item
-                         [:a.nav-link {:href "/fakenews"} "Fake articles"]]
-                       ] ]
-                      [:form.form-inline
-                                            (form/label "search" "Articles from portal:")
-                                             ;[:input.form-control.mr-sm-2 {:type "search" :placeholder "Search" :aria-label "Search"}]
-                                             [:input {:type "text" :placeholder "Enter portal for search"}]
-                                             [:br]
-                                             (form/submit-button {:class "btn btn-primary"} "Search") ]
-
-
-
-                      ]
                     (for [a articles]
                       [ :div.container.p-5.my-5.border
                        [:h2 [:a {:href (str "/articles/" (:_id a))} (:title a)]]
@@ -72,16 +95,7 @@
 
 
 (defn onlyTrueNews [articles]   ;as paramether filtered list
-  (basePageTemplate   [:nav.navbar.navbar-expand-sm.bg-secondary.navbar-light
-                       [:div.container-fluid
-                        [:ul.navbar-nav
-                         [:li.nav-item
-                          [:a.nav-link.active {:href "/"} "All articles"]]
-                         [:li.nav-item
-                          [:a.nav-link.active {:href "/truenews"} "True articles"]]
-                         [:li.nav-item
-                          [:a.nav-link.active {:href "/fakenews"} "Fake articles"]]
-                         ] ]]
+  (basePageTemplate
                      (for [a articles]
                        [ :div.container.p-5.my-5.border
                         [:h2 [:a {:href (str "/articles/" (:_id a))} (:title a)]]
@@ -91,16 +105,7 @@
                      ))
 
 (defn onlyFakeNews [articles]                               ;as paramether filtered list
-  (basePageTemplate   [:nav.navbar.navbar-expand-sm.bg-secondary.navbar-light
-                       [:div.container-fluid
-                        [:ul.navbar-nav
-                         [:li.nav-item
-                          [:a.nav-link.active {:href "/"} "All articles"]]
-                         [:li.nav-item
-                          [:a.nav-link.active {:href "/truenews"} "True articles"]]
-                         [:li.nav-item
-                          [:a.nav-link.active {:href "/fakenews"} "Fake articles"]]
-                         ] ]]
+  (basePageTemplate
                      (for [a articles]
                        [ :div.container.p-5.my-5.border
                         [:h2 [:a {:href (str "/articles/" (:_id a))} (:title a)]]
@@ -108,6 +113,7 @@
                         ]
                        )
                      ))
+
 ;Page for articles
 (defn article [a]
   (basePageTemplate
@@ -120,10 +126,14 @@
                     [:small (:created a)]
                     [:h1 (:title a)]
                     [:p (:body a)]
-     [:small (str "Author: " (:author a)) ]
+     (if (= (get a :author) "")
+       [:small (str "Author: unknown")]
+       [:small (str "Author: " (:author a)) ]
+      )
+     ;[:small (str "Author: " (:author a)) ]
      [:br]
      ;[:small ((db/findPortalById (:portal a)) :name)]
-     [:small (str "Portal: " (:portal a)) ]
+     [:small (str "Portal: " ((db/findPortalById (:portal a)) :name)) ]
      [:br]
      [:small (str "Tag: " (:tag a)) ]
      [:br]
@@ -133,16 +143,13 @@
      [:h5 (str "Comments")]
 
      [:a.btn.btn-primary {:href (str "/comments/" (:_id a) "/newcomment")} "New comment"]
-     ; [:small alati.pages/printComments (db/findCommentsByArticleId (:_id a))]
-     ; [:small (.get (.get (into '() (db/findCommentsByArticleId (:_id a)) 0)) :user)]
+     [:br] [:br]
 
-
-     [:small (for [c (db/findCommentsByArticleId (:_id a))]
-              (str "Reader " (get c :user) " write comment: " (get c :text)))
-     ]
-
-
-     ]))
+    (for [a (db/findCommentsByArticleId (:_id a))]
+                [:p (str "Reader " (get a :user) " write comment: " (get a :text))]
+                )
+    ]
+    ))
 
 ;Some repl testing
 ;(get (into [] (for [c (alati.db/findCommentsByArticleId "61c0955dbc538430a4acda76")]

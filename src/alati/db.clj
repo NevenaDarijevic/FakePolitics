@@ -89,4 +89,19 @@
 (defn findFakeNews []
   (mc/find-maps db articlesCollection  {:tag "false"} )) ;return lazy seq of maps)
 
+(defn findArticlesFromPortal [portal-name]
+  (mc/find-maps db articlesCollection {:portal portal-name })
+  )
+(defn countArticles []
+  (count(mc/find-maps db articlesCollection))
+  )
+(defn countArticlesFromPortal [portal-name]
+  (count(mc/find-maps db articlesCollection {:portal portal-name }))
+  )
+(defn countTrueArticles []
+  (count(mc/find-maps db articlesCollection {:tag "true"} )))
+(defn countFakeArticles []
+  (count(mc/find-maps db articlesCollection {:tag "false"} )))
+
+
 
