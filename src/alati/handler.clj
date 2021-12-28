@@ -50,7 +50,10 @@
            (POST "/articles/:art-id" [art-id title body author portal tag] (do (db/updateArticle art-id title body author portal tag) (response/redirect (str "/articles/" art-id))))
            ;deleting article
            (DELETE "/articles/:art-id" [art-id] (do (db/deleteArticle art-id) (response/redirect "/")))
-           (GET "/blogstatistics" [] (pages/blogstatistics)))
+           (GET "/blogstatistics" [] (pages/blogstatistics))
+
+           (GET "/articles/reported" [] (pages/displayReported (db/returnReported)))
+           )
 
 ;middleware for admin
 (defn wrapAdmin [handler]

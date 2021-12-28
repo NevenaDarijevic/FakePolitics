@@ -45,6 +45,8 @@
          [:a.nav-link {:href "/blogstatistics"} "Blog statistics"]]
         [:li.nav-item
          [:a.nav-link {:href "/articles/reportfake"} "Report fake news"]]
+        [:li.nav-item
+         [:a.nav-link {:href "/articles/reported"} "View reports"]]
 
         ] ]
       ]body
@@ -253,6 +255,19 @@
       )
     )
   )
+
+(defn displayReported [reported]
+  (basePageTemplate
+    [:h2 "Reports from readers"]
+    (for [r reported]
+
+      [ :div.container.p-5.my-5.border
+       [:p  (:link r)]
+       [:p  (:reason r)]
+       [:p  (:author r)]
+       [:p  (:portal r)]
+       ]
+      )))
 
 (defn addComment [c article-id]                                        ; i need for which article
   (basePageTemplate

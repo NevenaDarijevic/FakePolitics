@@ -112,5 +112,7 @@
               :portal  portal})
   )
 
+(defn returnReported []
+  (mc/find-maps db reportedNewsCollection)  )
 
 
