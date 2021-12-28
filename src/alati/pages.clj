@@ -77,7 +77,7 @@
   color: white;
 }"] [:div {:style "margin-left:300px"} [:body
      [:br]
-                 [:h1 "Blog statistics table"]
+                 [:h1 {:style "margin-left: 150px; color: #61C0DF;"}"Blog statistics table"]
      [:br]
                  [:table#stat
                   [:tr
@@ -176,7 +176,7 @@
      ]
     [:div.container.p-5.my-5.border
      ;comments
-     [:h5 (str "Comments                                                                        ") [:a.btn.btn-primary {:href (str "/comments/" (:_id a) "/newcomment")} "New comment"]]
+     [:h5 (str "Comments ") [:a.btn.btn-primary {:href (str "/comments/" (:_id a) "/newcomment")} "New comment"]]
 
      [:br]
 
@@ -235,7 +235,7 @@
       [:post (if a
                (str "/allfakenews/" (:link a))
                (str "/allfakenews"))]
-
+      [:h5 {:style "margin: 35px; color: #61C0DF;"} "On this page, you can report news that you suspect could be fake, and our administrators will check it within a reasonable time."]
       [:div.container.p-5.my-5.border
        (form/label "link" "Site url")
        (form/text-field {:type "url":class "form-control"} "link" (:link a))
@@ -258,16 +258,50 @@
 
 (defn displayReported [reported]
   (basePageTemplate
-    [:h2 "Reports from readers"]
-    (for [r reported]
+    [:br]
+    [:h3 {:style "margin-left: 600px; color: #61C0DF;"} "Reports from readers"]
+ [:br]
 
-      [ :div.container.p-5.my-5.border
-       [:p  (:link r)]
-       [:p  (:reason r)]
-       [:p  (:author r)]
-       [:p  (:portal r)]
-       ]
-      )))
+    [:style "#report {
+    table-layout: fixed;
+      width: 1500px;
+       font-family: Arial, Helvetica, sans-serif;
+       border-collapse: collapse;
+
+}
+
+          #report td, #report th {
+            border: 1px solid #ddd;
+            padding: 8px;
+          }
+
+        #report tr:nth-child(even){background-color: #f2f2f2;}
+
+        #report tr:hover {background-color: #ddd;}
+
+        #report th {
+          padding-top: 12px;
+          padding-bottom: 12px;
+          text-align: left;
+          background-color: #61C0DF;
+          color: white;
+        }"]
+    [:div {:style "margin-left:30px" "margin-bottom:30px" "margin-right:60px"} [:body  [:br] (for [r reported] [:table#report
+                                                                       [:tr
+                                                                        [:th "Link"]
+                                                                        [:th "Reason"]
+                                                                        [:th "Author"]
+                                                                        [:th "Portal"]
+                                                                        [:th "Action"]]
+                                                                       [:tr
+                                                                        [:td   (:link r)]
+                                                                        [:td (:reason r)]
+                                                                        [:td (:author r)]
+                                                                        [:td (:portal r)]
+                                                                        [:td (form/submit-button {:class "btn btn-danger"} "Reject")
+                                                                         ]
+                                                                        ]
+                                                                       ]) ]]))
 
 (defn addComment [c article-id]                                        ; i need for which article
   (basePageTemplate

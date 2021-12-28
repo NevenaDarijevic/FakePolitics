@@ -114,5 +114,6 @@
 
 (defn returnReported []
   (mc/find-maps db reportedNewsCollection)  )
-
+(defn deleteReported [rep-id]
+  (mc/remove-by-id db reportedNewsCollection (ObjectId. rep-id)))
 

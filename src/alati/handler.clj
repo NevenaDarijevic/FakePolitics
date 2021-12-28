@@ -53,6 +53,7 @@
            (GET "/blogstatistics" [] (pages/blogstatistics))
 
            (GET "/articles/reported" [] (pages/displayReported (db/returnReported)))
+           (DELETE "/articles/reported/:art-id" [rep-id] (do (db/deleteReported rep-id) (response/redirect "/articles/reported")))
            )
 
 ;middleware for admin
