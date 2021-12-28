@@ -25,6 +25,8 @@
          [:a.nav-link {:href "/admin/login"} "Login"]]
         [:li.nav-item
          [:a.nav-link {:href "/admin/logout"} "Logout"]]] ]]
+
+
      [:nav.navbar.navbar-expand-sm.bg-light.navbar-light
       [:div.container-fluid
        [:ul.navbar-nav
@@ -45,40 +47,60 @@
 
 (defn blogstatistics []
   (basePageTemplate
+    [:style "#stat {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 70%;
+}
 
-    [:table {:border "1" :width "100%"} 
-   [:tr
-    [:th "Statistic"]
-    [:th "Number"]
-   ]
-   [:tr
-    [:td  "Number of articles"]
-    [:td (db/countArticles)]
-   ]
-   [:tr
-    [:td "Number of articles from BLIC portal:"]
-    [:td (db/countArticlesFromPortal "Blic")]
-    ]
-   [:tr
-    [:td "Number of articles from POLITIKA portal:"]
-    [:td (db/countArticlesFromPortal "Politika")]
-    ]
-   [:tr
-    [:td "Number of articles from RTS portal:"]
-    [:td (db/countArticlesFromPortal "Rts")]
-    ]
-   [:tr
-    [:td "Number of TRUE articles (TRUE NEWS) :"]
-    [:td (db/countTrueArticles)]
-    ]
-   [:tr
-       [:td "Number of FALSE articles (FAKE NEWS) :"]
-       [:td (db/countFakeArticles)]
-       ]
+#stat td, #stat th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
 
+#stat tr:nth-child(even){background-color: #f2f2f2;}
 
+#stat tr:hover {background-color: #ddd;}
 
-   ]))
+#stat th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #61C0DF;
+  color: white;
+}"] [:div {:style "margin-left:300px"} [:body
+     [:br]
+                 [:h1 "Blog statistics table"]
+     [:br]
+                 [:table#stat
+                  [:tr
+                   [:th "Statistic"]
+                   [:th "Number"]]
+                  [:tr
+                   [:td  "Number of articles"]
+                   [:td (db/countArticles)]
+                   ]
+                  [:tr
+                   [:td "Number of articles from BLIC portal:"]
+                   [:td (db/countArticlesFromPortal "Blic")]
+                   ]
+                  [:tr
+                   [:td "Number of articles from POLITIKA portal:"]
+                   [:td (db/countArticlesFromPortal "Politika")]
+                   ]
+                  [:tr
+                   [:td "Number of articles from RTS portal:"]
+                   [:td (db/countArticlesFromPortal "Rts")]
+                   ]
+                  [:tr
+                   [:td "Number of TRUE articles (TRUE NEWS) :"]
+                   [:td (db/countTrueArticles)]
+                   ]
+                  [:tr
+                   [:td "Number of FALSE articles (FAKE NEWS) :"]
+                   [:td (db/countFakeArticles)]
+                   ]
+                  ]]]))
 
 ;mac lentght for text of every articles shown on index page as preview
 (def previewLengthForArticles 500)
@@ -93,8 +115,9 @@
   (basePageTemplate
                     (for [a articles]
                       [ :div.container.p-5.my-5.border
-                       [:h2 [:a {:href (str "/articles/" (:_id a))} (:title a)]]
+                       [:h2  (:title a)]
                        [:p (-> a :body trimText )]
+                       [:a.link {:href (str "/articles/" (:_id a))}"Read more"]
                        ]
                       )))
 
