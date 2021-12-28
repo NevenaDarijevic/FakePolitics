@@ -114,6 +114,10 @@
 
 (defn returnReported []
   (mc/find-maps db reportedNewsCollection)  )
+
+(defn countReports []
+  (count(mc/find-maps db reportedNewsCollection)))
+
 (defn deleteReported [rep-id]
   (mc/remove-by-id db reportedNewsCollection (ObjectId. rep-id)))
 

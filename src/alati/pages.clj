@@ -113,6 +113,10 @@
                    [:td "Portal with the most truthful news:"]
                    [:td (db/findMaxTrue)]
                    ]
+                  [:tr
+                   [:td "Number of reports to check"]
+                   [:td (db/countReports)]
+                   ]
                   ]]]))
 
 ;mac lentght for text of every articles shown on index page as preview
@@ -203,7 +207,7 @@
 
 ;Edit article or create an article if doesn't exist
 (defn editArticle [a]
-  (basePageTemplate
+  (basePageTemplate [:br] [:h3 {:style "margin-left: 600px; color: #61C0DF;"} "Article information"]
     (form/form-to
       [:post (if a
                (str "/articles/" (:_id a))
@@ -266,6 +270,7 @@
   (basePageTemplate
     [:br]
     [:h3 {:style "margin-left: 600px; color: #61C0DF;"} "Reports from readers"]
+    [:small {:style "margin-left: 690px; color: #61C0DF;"} (str "Count: " (db/countReports))]
  [:br]
 
     [:style "#report {
