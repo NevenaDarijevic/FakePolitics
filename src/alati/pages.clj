@@ -120,7 +120,7 @@
                      ))
 
 ;Page for articles
-(defn article [a]
+(defn article [a  comments]
   (basePageTemplate
     [ :div.container.p-5.my-5.border
      (form/form-to [:delete (str "/articles/" (:_id a))]
@@ -146,15 +146,13 @@
      ]
     [:div.container.p-5.my-5.border
      ;comments
-     [:h5 (str "Comments")]
+     [:h5 (str "Comments                                                                        ") [:a.btn.btn-primary {:href (str "/comments/" (:_id a) "/newcomment")} "New comment"]]
 
-     [:a.btn.btn-primary {:href (str "/comments/" (:_id a) "/newcomment")} "New comment"]
-     [:br] [:br]
+     [:br]
 
-    (for [a (db/findCommentsByArticleId (:_id a))]
-                [:p (str "Reader " (get a :user) " write comment: " (get a :text))]
-                )
-    ]
+     [:p  (for [c comments]
+                [:p (str "Reader " (get c :user) " write comment:   " (get c :text))]
+                )]]
     ))
 
 ;Some repl testing
@@ -165,18 +163,7 @@
 ;(for [c (alati.db/findCommentsByArticleId "61c0955dbc538430a4acda76")]
 ;  ( str "Reader:" (get c :user )" write comment: " (get c :text) ))
 ;=> ("Reader:Nikolina Maric write comment: I don't like this post" "Reader:Maja Nikolic write comment: I like this post")
-(defn- displayComment [comment]
-  (
-   [:div.container.p-5.my-5.border
-    [:small (comment :user)]
-  [:small (comment :text)]])
-  )
 
-(defn- printComments [collection]
-  (displayComment (first collection))
-  (if (empty? collection)
-    (print-str " ")
-    (printComments  (rest collection))))
 
 ;Edit article or create an article if doesn't exist
 (defn editArticle [a]
