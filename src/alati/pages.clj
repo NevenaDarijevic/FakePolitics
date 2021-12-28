@@ -10,8 +10,10 @@
   (html5
     [:head [:title "Project-Articles"]
      ;from: https://www.bootstrapcdn.com/
-     [:link {:rel "stylesheet" :href "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" :integrity "sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" :crossorigin "anonymous"}]]
-    [:body {:style "background-color:#BBFBF7"}
+     [:link {:rel "stylesheet" :href "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" :integrity "sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" :crossorigin "anonymous"}]
+     [:link {:rel "stylesheet"
+             :href "/blogstyle.css"}]]
+    [:body {:style "background-color:#FFFFFF"}
      [:nav.navbar.navbar-expand-sm.bg-dark.navbar-dark
       [:div.container-fluid
        [:ul.navbar-nav
@@ -29,9 +31,12 @@
         [:li.nav-item
          [:a.nav-link.active {:href "/"} "All articles"]]
         [:li.nav-item
-         [:a.nav-link.active {:href "/truenews"} "True articles"]]
-        [:li.nav-item
-         [:a.nav-link.active {:href "/fakenews"} "Fake articles"]]
+         [:div.dropdown
+          [:button.dropbtn "Filter articles\n"]
+          [:div.dropdown-content
+           [:a {:href "/truenews"} "   True articles "]
+           [:a {:href "/fakenews"} "Fake articles "]
+           ]]]
         [:li.nav-item
          [:a.nav-link {:href "/blogstatistics"} "Blog statistics"]]
         ] ]
