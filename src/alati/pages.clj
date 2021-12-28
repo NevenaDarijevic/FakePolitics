@@ -18,7 +18,7 @@
       [:div.container-fluid
        [:ul.navbar-nav
         [:li.nav-item
-         [:a.nav-link.active {:href "/"} "Home page"]]
+         [:a.nav-link.active {:href "/"} "Home page (all articles)"]]
         [:li.nav-item
          [:a.nav-link {:href "/articles/new"} "New article"]]
         [:li.nav-item
@@ -33,10 +33,8 @@
       [:div.container-fluid
        [:ul.navbar-nav
         [:li.nav-item
-         [:a.nav-link.active {:href "/"} "All articles"]]
-        [:li.nav-item
          [:div.dropdown
-          [:button.dropbtn "Filter articles\n"]
+          [:button.dropbtn "Filter articles"]
           [:div.dropdown-content
            [:a {:href "/truenews"} "   True articles "]
            [:a {:href "/fakenews"} "Fake articles "]
@@ -138,7 +136,7 @@
 
 
 (defn onlyTrueNews [articles]   ;as paramether filtered list
-  (basePageTemplate
+  (basePageTemplate [:h3 {:style "margin: 35px; color: #61C0DF;"} "True news"]
                      (for [a articles]
                        [ :div.container.p-5.my-5.border
                         [:h2 [:a {:href (str "/articles/" (:_id a))} (:title a)]]
@@ -148,7 +146,7 @@
                      ))
 
 (defn onlyFakeNews [articles]                               ;as paramether filtered list
-  (basePageTemplate
+  (basePageTemplate [:h3 {:style "margin: 35px; color: #61C0DF;"} "Fake news"]
                      (for [a articles]
                        [ :div.container.p-5.my-5.border
                         [:h2 [:a {:href (str "/articles/" (:_id a))} (:title a)]]
