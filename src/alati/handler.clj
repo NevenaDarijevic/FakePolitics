@@ -12,10 +12,15 @@
 
 (defroutes app-routes
            (GET "/" [] (pages/index (db/returnAllArticles)))
+
+           (GET "/articles/reportfake" [] (pages/reportfakenews nil))
+           (POST "/allfakenews/:link" [link reason author portal] (do (db/reportFakeNew link reason author portal) (response/redirect "/")))
+           (POST "/allfakenews" [link reason author portal] (do (db/reportFakeNew link reason author portal) (response/redirect "/")))
            (GET "/articles/:article-id" [article-id] (pages/article (db/returnArticleById article-id) (db/findCommentsByArticleId article-id)))
+
            (GET "/truenews" [] (pages/onlyTrueNews (db/findTrueNews)))
            (GET "/fakenews" [] (pages/onlyFakeNews (db/findFakeNews)))
-           ;      (GET "/articles/:article-id" [article-id] (pages/article (db/returnArticleById article-id))(db/findCommentsByArticleId article-id))
+
            (GET "/admin/login" [:as {session :session}]
              (if (:admin session)
                (response/redirect "/")
@@ -28,6 +33,7 @@
                                        (assoc-in [:session :admin] false)))
 
            ;  (GET "/comments/new" [] (pages/addComment nil ))
+
            (GET "/comments/:article-id/newcomment" [article-id] (pages/addComment nil article-id)) ;opens ok
            ;(POST "/comments" [user article-id text ] (do (db/createComment user article-id text) (response/redirect "/")))
            (POST "/comments/:article-id" [user article-id text] (do (db/createComment user article-id text) (response/redirect (str "/articles/" article-id))))

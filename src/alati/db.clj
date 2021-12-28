@@ -12,6 +12,7 @@
 (def articlesCollection "articles")
 (def portalsCollection  "portals")
 (def commentsCollection  "comments")
+(def reportedNewsCollection  "reported")
 ;Extracting connection uri
 (def  dbConnectionUri  (or (System/getenv "alatiMongoUri")
                          "mongodb://127.0.0.1/alati-test"))
@@ -102,6 +103,14 @@
   (count(mc/find-maps db articlesCollection {:tag "true"} )))
 (defn countFakeArticles []
   (count(mc/find-maps db articlesCollection {:tag "false"} )))
+
+(defn reportFakeNew [link reason author portal]
+  (mc/insert db reportedNewsCollection
+             {:link   link
+              :reason    reason
+              :author  author
+              :portal  portal})
+  )
 
 
 

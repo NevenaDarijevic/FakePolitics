@@ -24,7 +24,9 @@
         [:li.nav-item
          [:a.nav-link {:href "/admin/login"} "Login"]]
         [:li.nav-item
-         [:a.nav-link {:href "/admin/logout"} "Logout"]]] ]]
+         [:a.nav-link {:href "/admin/logout"} "Logout"]]
+
+        ] ]]
 
 
      [:nav.navbar.navbar-expand-sm.bg-light.navbar-light
@@ -41,6 +43,9 @@
            ]]]
         [:li.nav-item
          [:a.nav-link {:href "/blogstatistics"} "Blog statistics"]]
+        [:li.nav-item
+         [:a.nav-link {:href "/articles/reportfake"} "Report fake news"]]
+
         ] ]
       ]body
      ]))
@@ -219,6 +224,32 @@
        [:br]
        (anti-forgery-field)
        (form/submit-button {:class "btn btn-primary"} "Save")]
+      )
+    )
+  )
+(defn reportfakenews [a]
+  (basePageTemplate
+    (form/form-to
+      [:post (if a
+               (str "/allfakenews/" (:link a))
+               (str "/allfakenews"))]
+
+      [:div.container.p-5.my-5.border
+       (form/label "link" "Site url")
+       (form/text-field {:type "url":class "form-control"} "link" (:link a))
+       [:br]
+
+       (form/label "reason" "Reason for reporting")
+       (form/text-area { :class "form-control"} "reason" (:reason a))
+       (form/label "author" "Author")
+       (form/text-area {:class "form-control"} "author" (:author a))
+       (form/label "portal" "Portal")
+       (form/drop-down {:class "form-control"} "portal" (into [] (for [p (alati.db/returnAllPortals)]
+                                                                   (get p :name ) )))
+       [:br]
+
+       (anti-forgery-field)
+       (form/submit-button {:class "btn btn-primary"} "Report")]
       )
     )
   )
