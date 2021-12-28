@@ -107,6 +107,14 @@
                    [:td "Number of FALSE articles (FAKE NEWS) :"]
                    [:td (db/countFakeArticles)]
                    ]
+                  [:tr
+                   [:td "Portal with the most fake news:"]
+                   [:td (db/findMaxFake)]
+                   ]
+                  [:tr
+                   [:td "Portal with the most truthful news:"]
+                   [:td (db/findMaxTrue)]
+                   ]
                   ]]]))
 
 ;mac lentght for text of every articles shown on index page as preview

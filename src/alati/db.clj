@@ -117,3 +117,19 @@
 (defn deleteReported [rep-id]
   (mc/remove-by-id db reportedNewsCollection (ObjectId. rep-id)))
 
+(defn countTrueArticlesForPortal [portal]
+  (count(mc/find-maps db articlesCollection {:tag "true" :portal portal} )))
+
+(defn countFalseArticlesForPortal [portal]
+  (count(mc/find-maps db articlesCollection {:tag "false" :portal portal} )))
+
+(defn findMaxFake []
+  (let [maxFake (max (alati.db/countFalseArticlesForPortal "Blic") (alati.db/countFalseArticlesForPortal "Rts") (alati.db/countFalseArticlesForPortal "Politika"))]
+    (if (= maxFake (alati.db/countFalseArticlesForPortal "Blic")) "Blic" (if (= maxFake (alati.db/countFalseArticlesForPortal "Rts")) "Rts" (if (= maxFake (alati.db/countFalseArticlesForPortal "Politika")) "Politika" ) ) )
+   ))
+(defn findMaxTrue []
+  (let [maxTrue (max (alati.db/countTrueArticlesForPortal "Blic") (alati.db/countTrueArticlesForPortal "Rts") (alati.db/countTrueArticlesForPortal "Politika"))]
+    (if (= maxTrue (alati.db/countTrueArticlesForPortal "Blic")) "Blic" (if (= maxTrue (alati.db/countTrueArticlesForPortal "Rts")) "Rts" (if (= maxTrue (alati.db/countTrueArticlesForPortal "Politika")) "Politika" ) ) )
+    ))
+
+
