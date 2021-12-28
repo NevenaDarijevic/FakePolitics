@@ -1,18 +1,17 @@
-# Political news
+# FakePolitics
 
 
-This website contains political articles from various portals. Admin can create, edit and delete articles. Readers are allowed to read and search for articles by tags and portals, as well as to leave comments on articles.
-
+FakePolitics is a blog that contains articles from various portals categorized according to truthfulness and credibility. In addition to reviewing articles, readers are also allowed to leave comments on them, as well as to report fake news. The blog administrator is able to add, edit or delete new items. Also, the admin is allowed to view statistics, as well as view the reported content. The admin analyzes the submitted articles and decides whether to add them to the blog and with which tag (true or false).
 
 
 ## Prerequisites
 
 You will need [Leiningen][] 2.0.0 or above installed.
 The application uses following libraries:
--[Compojure][]
--[Ring][]
--[Monger][]
--[Hiccup][]
+[Compojure][]
+[Ring][]
+[Monger][]
+[Hiccup][]
 
 [leiningen]: https://github.com/technomancy/leiningen
 [compojure]: https://github.com/weavejester/compojure
