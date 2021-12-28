@@ -22,7 +22,7 @@
         [:li.nav-item
          [:a.nav-link {:href "/articles/new"} "New article"]]
         [:li.nav-item
-         [:a.nav-link {:href "/admin/login"} "Login"]]
+         [:a.nav-link.right  {:href "/admin/login"} "Login"]]
         [:li.nav-item
          [:a.nav-link {:href "/admin/logout"} "Logout"]]
 
@@ -37,15 +37,23 @@
           [:button.dropbtn "Filter articles"]
           [:div.dropdown-content
            [:a {:href "/truenews"} "   True articles "]
-           [:a {:href "/fakenews"} "Fake articles "]
-           ]]]
+           [:a {:href "/fakenews"} "Fake articles "]]] ]
+         [:li.nav-item
+           [:div.dropdown
+           [:button.dropbtn" Filter by portals"]
+           [:div.dropdown-content
+             [:a {:href "/filterbyportals/Blic"} "Blic"]
+
+             [:a {:href "/filterbyportals/Rts"} "Rts"]
+
+             [:a {:href "/filterbyportals/Politika"} "Politika"]]]]
+
         [:li.nav-item
          [:a.nav-link {:href "/blogstatistics"} "Blog statistics"]]
         [:li.nav-item
          [:a.nav-link {:href "/articles/reportfake"} "Report fake news"]]
         [:li.nav-item
          [:a.nav-link {:href "/articles/reported"} "View reports"]]
-
         ] ]
       ]body
      ]))
@@ -158,6 +166,7 @@
                         ]
                        )
                      ))
+
 
 ;Page for articles
 (defn article [a  comments]
@@ -352,3 +361,25 @@
        (anti-forgery-field)
        (form/submit-button {:class "btn btn-primary"}  "Login")]
 )))
+;(defn filterByPortals [portals]
+;  (basePageTemplate     [:h3 {:style "margin: 35px; color: #61C0DF;"} "Filter articles by portal"]
+;                    (form/form-to
+;                      [:div.container.p-5.my-5.border
+;                       [:br]
+;                       (form/label "portal" "Portal")
+;
+;                       (form/drop-down {:class "form-control"} "portal" (into [] (for [p portals]
+;                                                                                   (get p :name ) )))])))
+
+
+(defn articlesForPortal [articles portal]                          ;fine
+  (basePageTemplate
+    [:br] [:h3 {:style "margin-left: 600px; color: #61C0DF;"} (str "Articles from " portal )]
+    (for [a articles]
+      [ :div.container.p-5.my-5.border
+       [:h2  (:title a)]
+       [:p (-> a :body trimText )]
+       [:a.link {:href (str "/articles/" (:_id a))}"Read more"]
+       ]
+      )))
+

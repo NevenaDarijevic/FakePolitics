@@ -20,7 +20,7 @@
 
            (GET "/truenews" [] (pages/onlyTrueNews (db/findTrueNews)))
            (GET "/fakenews" [] (pages/onlyFakeNews (db/findFakeNews)))
-
+           (GET "/filterbyportals/:portal-name" [portal-name] [] (pages/articlesForPortal (db/findArticlesFromPortal portal-name) portal-name))
            (GET "/admin/login" [:as {session :session}]
              (if (:admin session)
                (response/redirect "/")
