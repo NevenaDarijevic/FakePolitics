@@ -158,7 +158,8 @@
                      ))
 
 (defn onlyFakeNews [articles]                               ;as paramether filtered list
-  (basePageTemplate [:h3 {:style "margin: 35px; color: #61C0DF;"} "Fake news"]
+  (basePageTemplate [:h3 {:style "margin: 35px; color: #61C0DF;"} "Fake news               "   [:a.btn.btn-primary {:href  "https://www.youtube.com/watch?v=AkwWcHekMdo&list=PLkdPn_rERIsmV4jWxQlq_rN_XmezcKcur" :target "_blank"} "How to recognize fake news"]
+                     ]
                      (for [a articles]
                        [ :div.container.p-5.my-5.border
                         [:h2 [:a {:href (str "/articles/" (:_id a))} (:title a)]]
@@ -254,10 +255,12 @@
       [:post (if a
                (str "/allfakenews/" (:link a))
                (str "/allfakenews"))]
-      [:h5 {:style "margin: 35px; color: #61C0DF;"} "On this page, you can report news that you suspect could be fake, and our administrators will check it within a reasonable time."]
-      [:div.container.p-5.my-5.border
-       (form/label "link" "Site url")
-       (form/text-field {:type "url":class "form-control"} "link" (:link a))
+      [:h5 {:style "margin: 35px; color: #61C0DF;"} "On this page, you can report news that you suspect could be fake, and our administrators will check it within a reasonable time.\n"  ]
+[:h5 {:style "margin: 35px; color: #61C0DF;"} [:a.link {:href "https://www.youtube.com/watch?v=AkwWcHekMdo&list=PLkdPn_rERIsmV4jWxQlq_rN_XmezcKcur" :target "_blank" }"How to recognize fake news?"]]
+
+     [:div.container.p-5.my-5.border
+           (form/label "link" "Site url")
+          (form/text-field {:type "url":class "form-control"} "link" (:link a))
        [:br]
 
        (form/label "reason" "Reason for reporting")
@@ -382,4 +385,5 @@
        [:a.link {:href (str "/articles/" (:_id a))}"Read more"]
        ]
       )))
+
 

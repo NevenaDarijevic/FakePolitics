@@ -7,8 +7,7 @@
                  [ring/ring-defaults "0.3.2"]
                  [com.novemberain/monger "3.5.0"]
                  [hiccup "1.0.5"]
-                [ring/ring-jetty-adapter "1.9.4"]
-                 ]
+                [ring/ring-jetty-adapter "1.9.4"]]
   :plugins [[lein-ring "0.12.5"]]
   :ring {:handler alati.handler/app}
   :main alati.web                                           ;start
