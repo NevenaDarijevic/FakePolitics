@@ -56,6 +56,10 @@
          [:a.nav-link {:href "/articles/reported"} "View reports"]]
         ] ]
       ]body
+     [:footer {:style "text-align: center;\n  padding: 3px;\n  background-color: black;\n  color: white;"}
+      [:br]
+      [:p "Author: Nevena Darijevic" [:br]
+       [:a {:href "https://rs.linkedin.com/in/nevena-darijević-53876415b" :target "_blank"} "LinkedIn Profile"]]]
      ]))
 
 (defn blogstatistics []
@@ -138,7 +142,15 @@
 ;index page which displays all articles using hiccup pages
 (defn index [articles]
   (basePageTemplate
-                    (for [a articles]
+    [ :div.container.p-5.my-5.border
+    [:h1 {:style "margin-left : 270px; color : red; font-family:georgia,garamond,serif;font-size:60px;font-style:italic;"} "Welcome to " [:strong "FakePolitics"] ]
+    [:br]
+     [:p {:style "margin-left: 140px; color: #61C0DF;font-size:35px"} "We doubt and question for you. It's up to you to trust us."
+      ]
+     [:br]
+    [:img {:src "https://yaow.org/wp-content/uploads/2017/05/Newspaper.jpg" :style "width: 1250px; height: 500px; margin-left: 0px; "}]
+     ]
+                        (for [a articles]
                       [ :div.container.p-5.my-5.border
                        [:h2  (:title a)]
                        [:p (-> a :body trimText )]
@@ -148,8 +160,15 @@
 
 
 (defn onlyTrueNews [articles]   ;as paramether filtered list
-  (basePageTemplate [:h3 {:style "margin: 35px; color: #61C0DF;"} "True news"]
-                     (for [a articles]
+  (basePageTemplate [:br] [:h3 {:style "margin-left: 650px; color: #61C0DF;"} "True news"]
+                    [ :div.container.p-5.my-5.border
+                     [:p {:style "margin-left: 50px; color: #61C0DF;font-size:20px"} "This page contains news that our administrators have judged to be true. You can take a closer look at any article."
+                      ]
+                     [:br][:br]
+                     [:img {:src "https://activisthistory.files.wordpress.com/2017/10/truth-lies-500x300-copy.jpg?w=500&h=300&crop=1" :style "width: 1200px; height: 500px; margin-left: 0px; "}]
+                    ]
+
+                    (for [a articles]
                        [ :div.container.p-5.my-5.border
                         [:h2 [:a {:href (str "/articles/" (:_id a))} (:title a)]]
                         [:p (-> a :body trimText )]
@@ -158,15 +177,23 @@
                      ))
 
 (defn onlyFakeNews [articles]                               ;as paramether filtered list
-  (basePageTemplate [:h3 {:style "margin: 35px; color: #61C0DF;"} "Fake news               "   [:a.btn.btn-primary {:href  "https://www.youtube.com/watch?v=AkwWcHekMdo&list=PLkdPn_rERIsmV4jWxQlq_rN_XmezcKcur" :target "_blank"} "How to recognize fake news"]
+  (basePageTemplate [:br] [:h3 {:style "margin-left: 650px; color: #61C0DF;"} "Fake news               " [:br]
                      ]
+                    [ :div.container.p-5.my-5.border
+                     [:p {:style "margin-left: 50px; color: #61C0DF;font-size:20px"} "This page contains news that our administrators have judged to be fake.
+                     You can take a closer look at any article and also click on the button below to see what the fake news means and how to spot it."
+                      ]
+                      [:br][:br]
+                    [:img {:src "https://www.coe.int/documents/11916313/24308513/fake-news-banner.jpg/a7c335de-7eee-4cf1-a6e9-cda44ec82fd2?t=1489763392000" :style "width: 1200px; height: 500px; margin-left: 0px; "}]
+                     [:br][:br] [:small {:style "margin-left: 460px;" } [ :a.btn.btn-primary {:href  "https://www.youtube.com/watch?v=AkwWcHekMdo&list=PLkdPn_rERIsmV4jWxQlq_rN_XmezcKcur" :target "_blank"} "How to recognize fake news"]]]
+
+
                      (for [a articles]
                        [ :div.container.p-5.my-5.border
                         [:h2 [:a {:href (str "/articles/" (:_id a))} (:title a)]]
                         [:p (-> a :body trimText )]
                         ]
-                       )
-                     ))
+                       )))
 
 
 ;Page for articles
@@ -298,7 +325,7 @@
 
     [:style "#report {
     table-layout: fixed;
-      width: 1500px;
+      width: 1400px;
        font-family: Arial, Helvetica, sans-serif;
        border-collapse: collapse;
 
@@ -320,7 +347,8 @@
           background-color: #61C0DF;
           color: white;
         }"]
-    [:div {:style "margin-left:30px" "margin-bottom:30px" "margin-right:60px"} [:body  [:br] (for [r reported] [:table#report
+    [:div {:style "margin-left:30px" "margin-bottom:30px" "margin-right:60px"}
+    [:body  [:br] (for [r reported] [:table#report
                                                                        [:tr
                                                                         [:th "Link"]
                                                                         [:th "Reason"]
@@ -328,14 +356,17 @@
                                                                         [:th "Portal"]
                                                                         [:th "Action"]]
                                                                        [:tr
-                                                                        [:td   (:link r)]
+                                                                        [:td  (if (= nil (:link r)) "No information about article" [:a.link {:href (:link r) :target "_blank" }
+                                                                               "Reported article"])]
                                                                         [:td (:reason r)]
                                                                         [:td (:author r)]
                                                                         [:td (:portal r)]
                                                                         [:td (form/submit-button {:class "btn btn-danger"} "Reject")
                                                                          ]
                                                                         ]
-                                                                       ]) ]]))
+                                                                       ]) ]]
+    [:br]
+    [:br]))
 
 (defn addComment [c article-id]                                        ; i need for which article
   (basePageTemplate
