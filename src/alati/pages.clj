@@ -122,7 +122,7 @@
                    [:td (db/findMaxTrue)]
                    ]
                   [:tr
-                   [:td "Number of reports to check"]
+                   [:td "Number of reports to check:"]
                    [:td (db/countReports)]
                    ]
                   ]]]))
@@ -256,17 +256,28 @@
                (str "/allfakenews/" (:link a))
                (str "/allfakenews"))]
       [:h5 {:style "margin: 35px; color: #61C0DF;"} "On this page, you can report news that you suspect could be fake, and our administrators will check it within a reasonable time.\n"  ]
-[:h5 {:style "margin: 35px; color: #61C0DF;"} [:a.link {:href "https://www.youtube.com/watch?v=AkwWcHekMdo&list=PLkdPn_rERIsmV4jWxQlq_rN_XmezcKcur" :target "_blank" }"How to recognize fake news?"]]
-
-     [:div.container.p-5.my-5.border
+      [:h6 {:style "margin: 35px; color: #61C0DF;"} [:a.link {:href "https://www.youtube.com/watch?v=AkwWcHekMdo&list=PLkdPn_rERIsmV4jWxQlq_rN_XmezcKcur" :target "_blank" }"How to recognize fake news?"]]
+      [:div.container.p-5.my-5.border
+       [:h3 "What is " [:strong "Fake News"]"?"]
+      [:p "“Fake news” is a term that has come to mean different things to different people. At its core, we are defining “fake news” as those news stories that are false: the story itself is fabricated, with no verifiable facts, sources or quotes. Sometimes these stories may be propaganda that is intentionally designed to mislead the reader, or may be designed as “clickbait” written for economic incentives (the writer profits on the number of people who click on the story). In recent years, fake news stories have proliferated via social media, in part because they are so easily and quickly shared online."]
+      [:h3 "Misinformation and Disinformation (other types of \"fake news\")"]
+      [:p "The universe of “fake news” is much larger than simply false news stories. Some stories may have a nugget of truth, but lack any contextualizing details. They may not include any verifiable facts or sources. Some stories may include basic verifiable facts, but are written using language that is deliberately inflammatory, leaves out pertinent details or only presents one viewpoint. \"Fake news\" exists within a larger ecosystem of mis- and disinformation. \n\nMisinformation is false or inaccurate information that is mistakenly or inadvertently created or spread; the intent is not to deceive. Disinformation is false information that is deliberately created and spread \"in order to influence public opinion or obscure the truth\" (https://www.merriam-webster.com/dictionary/disinformation). \n\nClaire Wardle of FirstDraftNews.com has created the helpful visual image below to help us think about the ecosystem of mis- and disinformation. And as she points out, \"it's complicated.\""]
+       [:img {:alt "7 types of mis/disinformation" :src "https://firstdraftnews.com/wp-content/uploads/2017/02/FDN_7Types_Misinfo-01-1024x576.jpg?x40896" :style "width: 1200px; height: 600px;"}]
+      [:small "Source: " [:a.link {:href "https://guides.lib.umich.edu/fakenews" :target "_blank" }"Read article"]]
+       ]
+       [:div.container.p-5.my-5.border
+        [:h3 {:style "margin-left: 550px; color: #61C0DF;"}  "Report form"]
+        [:br]
            (form/label "link" "Site url")
           (form/text-field {:type "url":class "form-control"} "link" (:link a))
        [:br]
 
        (form/label "reason" "Reason for reporting")
        (form/text-area { :class "form-control"} "reason" (:reason a))
+        [:br]
        (form/label "author" "Author")
        (form/text-area {:class "form-control"} "author" (:author a))
+        [:br]
        (form/label "portal" "Portal")
        (form/drop-down {:class "form-control"} "portal" (into [] (for [p (alati.db/returnAllPortals)]
                                                                    (get p :name ) )))
