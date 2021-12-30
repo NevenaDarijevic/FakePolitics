@@ -1,4 +1,4 @@
-(ns alati.pages.pagesAdmin
+(ns alati.pagesAdmin
   (:require [hiccup.page :refer [html5]]
             [hiccup.form :as form]
             [alati.db :as db]
@@ -210,20 +210,23 @@
           color: white;
         }"]
     [:div {:style "margin-left:30px" "margin-bottom:30px" "margin-right:60px"}
-    [:body  [:br] (for [r reported] [:table#report
-                                                                       [:tr
-                                                                        [:th "Link"]
-                                                                        [:th "Reason"]
-                                                                        [:th "Author"]
-                                                                        [:th "Portal"]
-                                                                        [:th "Action"]]
-                                                                       [:tr
-                                                                        [:td  (if (= nil (:link r)) "No information about article" [:a.link {:href (:link r) :target "_blank" }
-                                                                               "Reported article"])]
-                                                                        [:td (:reason r)]
-                                                                        [:td (:author r)]
-                                                                        [:td (:portal r)]
-                                                                        [:td (form/submit-button {:class "btn btn-danger"} "Reject")]]] ) ]]
+    [:body  [:br] (for [r reported]
+                    [:table#report
+                     (form/form-to
+                       [:delete (str "/reported/" (:_id r))]
+                       [:tr
+                        [:th "Link"]
+                        [:th "Reason"]
+                        [:th "Author"]
+                        [:th "Portal"]
+                        [:th "Action"]]
+                       [:tr
+                        [:td  (if (= nil (:link r)) "No information about article"
+                                                    [:a.link {:href (:link r) :target "_blank" } "Reported article"])]
+                        [:td (:reason r)]
+                        [:td (:author r)]
+                        [:td (:portal r)]
+                        [:td (form/submit-button {:class "btn btn-danger"} "Reject")]])] ) ]]
     [:br]
     [:br]))
 

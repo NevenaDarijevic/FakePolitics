@@ -3,8 +3,8 @@
             [compojure.route :as route]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
             [alati.db :as db]
-            [alati.pages.pagesAdmin :as Admin]
-            [alati.pages.pagesReader :as Reader]
+            [alati.pagesAdmin :as Admin]
+            [alati.pagesReader :as Reader]
             [ring.util.response :as response ]
             [ring.middleware.session :as session]
             [alati.admin :as admin]
@@ -59,7 +59,7 @@
            (GET "/blogstatistics" [] (Admin/blogstatistics))
            ;reported news
            (GET "/articles/reported" [] (Admin/displayReported (db/returnReported)))
-           (DELETE "/articles/reported/:art-id" [rep-id] (do (db/deleteReported rep-id) (response/redirect "/articles/reported")))
+           (DELETE "/reported/:rep-id" [rep-id] (do (db/deleteReported rep-id) (response/redirect "/articles/reported")))
            )
 
 ;middleware for admin

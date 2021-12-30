@@ -1,4 +1,4 @@
-(ns alati.pages.pagesReader
+(ns alati.pagesReader
   (:require [hiccup.page :refer [html5]]
             [hiccup.form :as form]
             [alati.db :as db]
@@ -25,17 +25,21 @@
             [:div.dropdown-content
              [:a {:href "/truenews"} "   True articles "]
              [:a {:href "/fakenews"} "Fake articles "]]] ]
+
           [:li.nav-item
            [:div.dropdown
             [:button.dropbtn " Filter by portals"]
             [:div.dropdown-content
-             [:a {:href "/filterbyportals/Blic"} "Blic"]
-             [:a {:href "/filterbyportals/Rts"} "Rts"]
-             [:a {:href "/filterbyportals/Politika"} "Politika"]]]]
+             [:a {:href "/filterbyportals/Blic"} "From Politika"]
+             [:a {:href "/filterbyportals/Rts"} "From Rts"]
+             [:a {:href "/filterbyportals/Politika"} "From Blic"]]]]
           [:li.nav-item
            [:a.nav-link {:href "/articles/reportfake"} "Report fake news"]]
         [:li.nav-item
-         [:a.nav-link.right  {:href "/admin/login"} "Login"]]]]]
+         [:a.nav-link.right  {:href "/admin/login"} "Login"]]]]
+
+
+      ]
       body
      [:footer {:style "text-align: center;\n  padding: 3px;\n  background-color: black;\n  color: white;"}
       [:br]
