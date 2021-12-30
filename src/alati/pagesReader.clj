@@ -125,7 +125,7 @@
 
 
 ;Page for reporting fake news by readers
-(defn reportfakenews [a]
+(defn reportfakenews [a ]
   (basePageTemplateReader
     (form/form-to
       [:post (if a

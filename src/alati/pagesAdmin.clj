@@ -221,10 +221,10 @@
                         [:th "Portal"]
                         [:th "Action"]]
                        [:tr
-                        [:td  (if (= nil (:link r)) "No information about article"
-                                                    [:a.link {:href (:link r) :target "_blank" } "Reported article"])]
-                        [:td (:reason r)]
-                        [:td (:author r)]
+                        [:td  {:style "color:red"} (if (= "" (:link r)) "No information about article" [:a.link {:href (:link r) :target "_blank" }
+                                                                                    "Reported article"])]
+                        [:td (if (= "" (:reason r)){:style "color:red"}) (if (= "" (:reason r) ) "No information about reason" (:reason r))]
+                        [:td (if (= "" (:author r)){:style "color:red"}) (if (= "" (:author r)) "No information about author"(:author r))]
                         [:td (:portal r)]
                         [:td (form/submit-button {:class "btn btn-danger"} "Reject")]])] ) ]]
     [:br]
