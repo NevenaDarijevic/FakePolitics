@@ -6,7 +6,7 @@
             [hiccup.page :refer [html5 include-css include-js]]))
 
 ;Basic template for all pages, this is good practice
-(defn basePageTemplate [& body]
+(defn basePageTemplateAdmin [& body]
   (html5
     [:head [:title "Project-Articles"]
      ;from: https://www.bootstrapcdn.com/
@@ -18,52 +18,71 @@
       [:div.container-fluid
        [:ul.navbar-nav
         [:li.nav-item
-         [:a.nav-link.active {:href "/"} "Home page (all articles)"]]
+         [:a.nav-link.active {:href "/indexadmin"} "Home page"]]
         [:li.nav-item
          [:a.nav-link {:href "/articles/new"} "New article"]]
+        ; [:li.nav-item
+        ;         [:a.nav-link.right  {:href "/admin/login"} "Login"]]
         [:li.nav-item
-         [:a.nav-link.right  {:href "/admin/login"} "Login"]]
+         [:a.nav-link {:href "/blogstatistics"} "Blog statistics"]]
+        [:li.nav-item
+         [:a.nav-link {:href "/articles/reported"} "View reports"]]
         [:li.nav-item
          [:a.nav-link {:href "/admin/logout"} "Logout"]]
 
         ] ]]
-
-
-     [:nav.navbar.navbar-expand-sm.bg-light.navbar-light
+   body
+     [:footer {:style "text-align: center;\n  padding: 3px;\n  background-color: black;\n  color: white;"}
+      [:br]
+      [:p "Author: Nevena Darijevic" [:br]
+       [:a {:href "https://rs.linkedin.com/in/nevena-darijević-53876415b" :target "_blank"} "LinkedIn Profile"]]]
+     ]))
+(defn basePageTemplateReader [& body]
+  (html5
+    [:head [:title "Project-Articles"]
+     ;from: https://www.bootstrapcdn.com/
+     [:link {:rel "stylesheet" :href "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" :integrity "sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" :crossorigin "anonymous"}]
+     [:link {:rel "stylesheet"
+             :href "/blogstyle.css"}]]
+    [:body {:style "background-color:#FFFFFF"}
+     [:nav.navbar.navbar-expand-sm.bg-dark.navbar-dark
       [:div.container-fluid
        [:ul.navbar-nav
         [:li.nav-item
-         [:div.dropdown
-          [:button.dropbtn "Filter articles"]
-          [:div.dropdown-content
-           [:a {:href "/truenews"} "   True articles "]
-           [:a {:href "/fakenews"} "Fake articles "]]] ]
-         [:li.nav-item
+         [:a.nav-link.active {:href "/"} "Home page"]]
+        [:li.nav-item
            [:div.dropdown
-           [:button.dropbtn" Filter by portals"]
-           [:div.dropdown-content
+            [:button.dropbtn "Filter articles"]
+            [:div.dropdown-content
+             [:a {:href "/truenews"} "   True articles "]
+             [:a {:href "/fakenews"} "Fake articles "]]] ]
+          [:li.nav-item
+           [:div.dropdown
+            [:button.dropbtn" Filter by portals"]
+            [:div.dropdown-content
              [:a {:href "/filterbyportals/Blic"} "Blic"]
 
              [:a {:href "/filterbyportals/Rts"} "Rts"]
 
              [:a {:href "/filterbyportals/Politika"} "Politika"]]]]
 
+          [:li.nav-item
+           [:a.nav-link {:href "/articles/reportfake"} "Report fake news"]]
+
         [:li.nav-item
-         [:a.nav-link {:href "/blogstatistics"} "Blog statistics"]]
-        [:li.nav-item
-         [:a.nav-link {:href "/articles/reportfake"} "Report fake news"]]
-        [:li.nav-item
-         [:a.nav-link {:href "/articles/reported"} "View reports"]]
-        ] ]
-      ]body
+         [:a.nav-link.right  {:href "/admin/login"} "Login"]]]]]
+        ; [:li.nav-item
+        ;         [:a.nav-link {:href "/admin/logout"} "Logout"]]
+
+
+body
      [:footer {:style "text-align: center;\n  padding: 3px;\n  background-color: black;\n  color: white;"}
       [:br]
       [:p "Author: Nevena Darijevic" [:br]
        [:a {:href "https://rs.linkedin.com/in/nevena-darijević-53876415b" :target "_blank"} "LinkedIn Profile"]]]
      ]))
-
 (defn blogstatistics []
-  (basePageTemplate
+  (basePageTemplateAdmin
     [:style "#stat {
   font-family: Arial, Helvetica, sans-serif;
   border-collapse: collapse;
@@ -129,7 +148,7 @@
                    [:td "Number of reports to check:"]
                    [:td (db/countReports)]
                    ]
-                  ]]]))
+                  ]]][:br][:br][:br]))
 
 ;mac lentght for text of every articles shown on index page as preview
 (def previewLengthForArticles 500)
@@ -140,8 +159,8 @@
                          text))
 
 ;index page which displays all articles using hiccup pages
-(defn index [articles]
-  (basePageTemplate
+(defn indexReader [articles]
+  (basePageTemplateReader
     [ :div.container.p-5.my-5.border
     [:h1 {:style "margin-left : 270px; color : red; font-family:georgia,garamond,serif;font-size:60px;font-style:italic;"} "Welcome to " [:strong "FakePolitics"] ]
     [:br]
@@ -154,13 +173,29 @@
                       [ :div.container.p-5.my-5.border
                        [:h2  (:title a)]
                        [:p (-> a :body trimText )]
-                       [:a.link {:href (str "/articles/" (:_id a))}"Read more"]
+                       [:a.link {:href (str "/articlesReader/" (:_id a))}"Read more"]
                        ]
                       )))
-
+(defn indexAdmin [articles]
+  (basePageTemplateAdmin
+    [ :div.container.p-5.my-5.border
+     [:h1 {:style "margin-left : 270px; color : red; font-family:georgia,garamond,serif;font-size:60px;font-style:italic;"} "Welcome to " [:strong "FakePolitics"] ]
+     [:br]
+     [:p {:style "margin-left: 140px; color: #61C0DF;font-size:35px"} "We doubt and question for you. It's up to you to trust us."
+      ]
+     [:br]
+     [:img {:src "https://yaow.org/wp-content/uploads/2017/05/Newspaper.jpg" :style "width: 1250px; height: 500px; margin-left: 0px; "}]
+     ]
+    (for [a articles]
+      [ :div.container.p-5.my-5.border
+       [:h2  (:title a)]
+       [:p (-> a :body trimText )]
+       [:a.link {:href (str "/articlesAdmin/" (:_id a))}"Read more"]
+       ]
+      )))
 
 (defn onlyTrueNews [articles]   ;as paramether filtered list
-  (basePageTemplate [:br] [:h3 {:style "margin-left: 650px; color: #61C0DF;"} "True news"]
+  (basePageTemplateReader [:br] [:h3 {:style "margin-left: 650px; color: #61C0DF;"} "True news"]
                     [ :div.container.p-5.my-5.border
                      [:p {:style "margin-left: 50px; color: #61C0DF;font-size:20px"} "This page contains news that our administrators have judged to be true. You can take a closer look at any article."
                       ]
@@ -170,14 +205,14 @@
 
                     (for [a articles]
                        [ :div.container.p-5.my-5.border
-                        [:h2 [:a {:href (str "/articles/" (:_id a))} (:title a)]]
+                        [:h2 [:a {:href (str "/articlesReader/" (:_id a))} (:title a)]]
                         [:p (-> a :body trimText )]
                         ]
                        )
                      ))
 
 (defn onlyFakeNews [articles]                               ;as paramether filtered list
-  (basePageTemplate [:br] [:h3 {:style "margin-left: 650px; color: #61C0DF;"} "Fake news               " [:br]
+  (basePageTemplateReader [:br] [:h3 {:style "margin-left: 650px; color: #61C0DF;"} "Fake news               " [:br]
                      ]
                     [ :div.container.p-5.my-5.border
                      [:p {:style "margin-left: 50px; color: #61C0DF;font-size:20px"} "This page contains news that our administrators have judged to be fake.
@@ -190,15 +225,15 @@
 
                      (for [a articles]
                        [ :div.container.p-5.my-5.border
-                        [:h2 [:a {:href (str "/articles/" (:_id a))} (:title a)]]
+                        [:h2 [:a {:href (str "/articlesReader/" (:_id a))} (:title a)]]
                         [:p (-> a :body trimText )]
                         ]
                        )))
 
 
 ;Page for articles
-(defn article [a  comments]
-  (basePageTemplate
+(defn articleAdmin [a]
+  (basePageTemplateAdmin
     [ :div.container.p-5.my-5.border
      (form/form-to [:delete (str "/articles/" (:_id a))]
 
@@ -221,6 +256,25 @@
      [:small (str "Tag: " (:tag a)) ]
      [:br]
      ]
+    ))
+(defn articleReader [a  comments]
+  (basePageTemplateReader
+    [ :div.container.p-5.my-5.border
+     [:small (:created a)]
+     [:h1 (:title a)]
+     [:p (:body a)]
+     (if (= (get a :author) "")
+       [:small (str "Author: unknown")]
+       [:small (str "Author: " (:author a)) ]
+       )
+     [:br]
+     ;[:small ((db/findPortalById (:portal a)) :name)]
+     ;  [:small (str "Portal: " ((db/findPortalById (:portal a)) :name)) ]
+     [:small (str "Portal: " (:portal a)) ]
+     [:br]
+     [:small (str "Tag: " (:tag a)) ]
+     [:br]
+     ]
     [:div.container.p-5.my-5.border
      ;comments
      [:h5 (str "Comments ") [:a.btn.btn-primary {:href (str "/comments/" (:_id a) "/newcomment")} "New comment"]]
@@ -228,10 +282,9 @@
      [:br]
 
      [:p  (for [c comments]
-                [:p (str "Reader " (get c :user) " write comment:   " (get c :text))]
-                )]]
+            [:p (str "Reader " (get c :user) " write comment:   " (get c :text))]
+            )]]
     ))
-
 ;Some repl testing
 ;(get (into [] (for [c (alati.db/findCommentsByArticleId "61c0955dbc538430a4acda76")]
 ;       ( str "Reader:" (get c :user )" write comment: " (get c :text) ))) 0)
@@ -244,10 +297,10 @@
 
 ;Edit article or create an article if doesn't exist
 (defn editArticle [a]
-  (basePageTemplate [:br] [:h3 {:style "margin-left: 600px; color: #61C0DF;"} "Article information"]
+  (basePageTemplateAdmin [:br] [:h3 {:style "margin-left: 600px; color: #61C0DF;"} "Article information"]
     (form/form-to
       [:post (if a
-               (str "/articles/" (:_id a))
+               (str "/articlesAdmin/" (:_id a))
                "/articles")]
 
       [:div.container.p-5.my-5.border
@@ -277,11 +330,13 @@
     )
   )
 (defn reportfakenews [a]
-  (basePageTemplate
+  (basePageTemplateReader
     (form/form-to
       [:post (if a
                (str "/allfakenews/" (:link a))
                (str "/allfakenews"))]
+      [:br]
+      [:h1 {:style "margin-left: 550px; color: #61C0DF;"}"Report fake news"]
       [:h5 {:style "margin: 35px; color: #61C0DF;"} "On this page, you can report news that you suspect could be fake, and our administrators will check it within a reasonable time.\n"  ]
       [:h6 {:style "margin: 35px; color: #61C0DF;"} [:a.link {:href "https://www.youtube.com/watch?v=AkwWcHekMdo&list=PLkdPn_rERIsmV4jWxQlq_rN_XmezcKcur" :target "_blank" }"How to recognize fake news?"]]
       [:div.container.p-5.my-5.border
@@ -317,7 +372,7 @@
   )
 
 (defn displayReported [reported]
-  (basePageTemplate
+  (basePageTemplateAdmin
     [:br]
     [:h3 {:style "margin-left: 600px; color: #61C0DF;"} "Reports from readers"]
     [:small {:style "margin-left: 690px; color: #61C0DF;"} (str "Count: " (db/countReports))]
@@ -364,12 +419,13 @@
                                                                         [:td (form/submit-button {:class "btn btn-danger"} "Reject")
                                                                          ]
                                                                         ]
-                                                                       ]) ]]
+                                                                      ] ) ]]
     [:br]
-    [:br]))
+    [:br]
+   ))
 
 (defn addComment [c article-id]                                        ; i need for which article
-  (basePageTemplate
+  (basePageTemplateReader
     (form/form-to
       [:post (if article-id
                (str "/comments/" article-id )
@@ -389,7 +445,7 @@
 
 ;Login page
 (defn adminLogin [ & [message]]
-  (basePageTemplate
+  (basePageTemplateReader
     (when message [:div.alert.alert-danger message])
     (form/form-to
       [:post "/admin/login"]
@@ -418,7 +474,7 @@
 
 
 (defn articlesForPortal [articles portal]                          ;fine
-  (basePageTemplate
+  (basePageTemplateReader
     [:br] [:h3 {:style "margin-left: 600px; color: #61C0DF;"} (str "Articles from " portal )]
     (if (= portal "Blic")
     [:img {:src "https://is5-ssl.mzstatic.com/image/thumb/Purple116/v4/75/06/ff/7506ff38-bfba-c5d1-0724-c9b57c1f91be/BlicIcon-1x_U007emarketing-0-9-0-85-220.png/1200x600wa.png" :style "width: 600px; height: 300px; margin-left: 390px; ":alt "Blic"}]

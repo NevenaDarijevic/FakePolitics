@@ -10,13 +10,12 @@
   ))
 
 
-(defroutes app-routes
-           (GET "/" [] (pages/index (db/returnAllArticles)))
-
+(defroutes app-routes                                       ;reader routes
+           (GET "/" [] (pages/indexReader (db/returnAllArticles)))
            (GET "/articles/reportfake" [] (pages/reportfakenews nil))
            (POST "/allfakenews/:link" [link reason author portal] (do (db/reportFakeNew link reason author portal) (response/redirect "/")))
            (POST "/allfakenews" [link reason author portal] (do (db/reportFakeNew link reason author portal) (response/redirect "/")))
-           (GET "/articles/:article-id" [article-id] (pages/article (db/returnArticleById article-id) (db/findCommentsByArticleId article-id)))
+           (GET "/articlesReader/:article-id" [article-id] (pages/articleReader (db/returnArticleById article-id) (db/findCommentsByArticleId article-id)))
 
            (GET "/truenews" [] (pages/onlyTrueNews (db/findTrueNews)))
            (GET "/fakenews" [] (pages/onlyFakeNews (db/findFakeNews)))
@@ -26,7 +25,7 @@
                (response/redirect "/")
                (pages/adminLogin)))
            (POST "/admin/login" [username password] (if (admin/adminLogin username password)
-                                                      (-> (response/redirect "/")
+                                                      (-> (response/redirect "/indexadmin")
                                                           (assoc-in [:session :admin] true))
                                                       (pages/adminLogin "INVALID USERNAME OR PASSWORD! TRY AGAIN!")))
            (GET "/admin/logout" [] (-> (response/redirect "/")
@@ -36,20 +35,22 @@
 
            (GET "/comments/:article-id/newcomment" [article-id] (pages/addComment nil article-id)) ;opens ok
            ;(POST "/comments" [user article-id text ] (do (db/createComment user article-id text) (response/redirect "/")))
-           (POST "/comments/:article-id" [user article-id text] (do (db/createComment user article-id text) (response/redirect (str "/articles/" article-id))))
+           (POST "/comments/:article-id" [user article-id text] (do (db/createComment user article-id text) (response/redirect (str "/articlesReader/" article-id))))
 
            (route/not-found "Not Found"))
 
 (defroutes adminRoutes
+           (GET "/indexadmin" [] (pages/indexAdmin (db/returnAllArticles)))
+           (GET "/articlesAdmin/:article-id" [article-id] (pages/articleAdmin (db/returnArticleById article-id)))
            ;routes for creating new article, only admin can do it
            (GET "/articles/new" [] (pages/editArticle nil))
            (POST "/articles" [title body  author portal tag
-                              ] (do (db/createArticle title body author portal tag) (response/redirect "/")))
+                              ] (do (db/createArticle title body author portal tag) (response/redirect "/indexadmin")))
            ;routes for editing articles, only admin can do it
            (GET "/articles/:article-id/edit" [article-id] (pages/editArticle (db/returnArticleById article-id)))
-           (POST "/articles/:art-id" [art-id title body author portal tag] (do (db/updateArticle art-id title body author portal tag) (response/redirect (str "/articles/" art-id))))
+           (POST "/articlesAdmin/:art-id" [art-id title body author portal tag] (do (db/updateArticle art-id title body author portal tag) (response/redirect (str "/articlesAdmin/" art-id))))
            ;deleting article
-           (DELETE "/articles/:art-id" [art-id] (do (db/deleteArticle art-id) (response/redirect "/")))
+           (DELETE "/articles/:art-id" [art-id] (do (db/deleteArticle art-id) (response/redirect "/indexadmin")))
            (GET "/blogstatistics" [] (pages/blogstatistics))
 
            (GET "/articles/reported" [] (pages/displayReported (db/returnReported)))
