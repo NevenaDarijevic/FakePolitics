@@ -1,46 +1,15 @@
-(ns alati.pages
+(ns alati.pages.pagesReader
   (:require [hiccup.page :refer [html5]]
             [hiccup.form :as form]
             [alati.db :as db]
             [ring.util.anti-forgery :refer [anti-forgery-field]]
             [hiccup.page :refer [html5 include-css include-js]]))
 
-;Basic template for all pages, this is good practice
-(defn basePageTemplateAdmin [& body]
-  (html5
-    [:head [:title "Project-Articles"]
-     ;from: https://www.bootstrapcdn.com/
-     [:link {:rel "stylesheet" :href "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" :integrity "sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" :crossorigin "anonymous"}]
-     [:link {:rel "stylesheet"
-             :href "/blogstyle.css"}]]
-    [:body {:style "background-color:#FFFFFF"}
-     [:nav.navbar.navbar-expand-sm.bg-dark.navbar-dark
-      [:div.container-fluid
-       [:ul.navbar-nav
-        [:li.nav-item
-         [:a.nav-link.active {:href "/indexadmin"} "Home page"]]
-        [:li.nav-item
-         [:a.nav-link {:href "/articles/new"} "New article"]]
-        ; [:li.nav-item
-        ;         [:a.nav-link.right  {:href "/admin/login"} "Login"]]
-        [:li.nav-item
-         [:a.nav-link {:href "/blogstatistics"} "Blog statistics"]]
-        [:li.nav-item
-         [:a.nav-link {:href "/articles/reported"} "View reports"]]
-        [:li.nav-item
-         [:a.nav-link {:href "/admin/logout"} "Logout"]]
 
-        ] ]]
-   body
-     [:footer {:style "text-align: center;\n  padding: 3px;\n  background-color: black;\n  color: white;"}
-      [:br]
-      [:p "Author: Nevena Darijevic" [:br]
-       [:a {:href "https://rs.linkedin.com/in/nevena-darijević-53876415b" :target "_blank"} "LinkedIn Profile"]]]
-     ]))
+;Basic page template for pages for reader
 (defn basePageTemplateReader [& body]
   (html5
     [:head [:title "Project-Articles"]
-     ;from: https://www.bootstrapcdn.com/
      [:link {:rel "stylesheet" :href "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" :integrity "sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" :crossorigin "anonymous"}]
      [:link {:rel "stylesheet"
              :href "/blogstyle.css"}]]
@@ -58,99 +27,24 @@
              [:a {:href "/fakenews"} "Fake articles "]]] ]
           [:li.nav-item
            [:div.dropdown
-            [:button.dropbtn" Filter by portals"]
+            [:button.dropbtn " Filter by portals"]
             [:div.dropdown-content
              [:a {:href "/filterbyportals/Blic"} "Blic"]
-
              [:a {:href "/filterbyportals/Rts"} "Rts"]
-
              [:a {:href "/filterbyportals/Politika"} "Politika"]]]]
-
           [:li.nav-item
            [:a.nav-link {:href "/articles/reportfake"} "Report fake news"]]
-
         [:li.nav-item
          [:a.nav-link.right  {:href "/admin/login"} "Login"]]]]]
-        ; [:li.nav-item
-        ;         [:a.nav-link {:href "/admin/logout"} "Logout"]]
-
-
-body
+      body
      [:footer {:style "text-align: center;\n  padding: 3px;\n  background-color: black;\n  color: white;"}
       [:br]
       [:p "Author: Nevena Darijevic" [:br]
        [:a {:href "https://rs.linkedin.com/in/nevena-darijević-53876415b" :target "_blank"} "LinkedIn Profile"]]]
      ]))
-(defn blogstatistics []
-  (basePageTemplateAdmin
-    [:style "#stat {
-  font-family: Arial, Helvetica, sans-serif;
-  border-collapse: collapse;
-  width: 70%;
-}
 
-#stat td, #stat th {
-  border: 1px solid #ddd;
-  padding: 8px;
-}
 
-#stat tr:nth-child(even){background-color: #f2f2f2;}
-
-#stat tr:hover {background-color: #ddd;}
-
-#stat th {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  text-align: left;
-  background-color: #61C0DF;
-  color: white;
-}"] [:div {:style "margin-left:300px"} [:body
-     [:br]
-                 [:h1 {:style "margin-left: 150px; color: #61C0DF;"}"Blog statistics table"]
-     [:br]
-                 [:table#stat
-                  [:tr
-                   [:th "Statistic"]
-                   [:th "Number"]]
-                  [:tr
-                   [:td  "Number of articles"]
-                   [:td (db/countArticles)]
-                   ]
-                  [:tr
-                   [:td "Number of articles from BLIC portal:"]
-                   [:td (db/countArticlesFromPortal "Blic")]
-                   ]
-                  [:tr
-                   [:td "Number of articles from POLITIKA portal:"]
-                   [:td (db/countArticlesFromPortal "Politika")]
-                   ]
-                  [:tr
-                   [:td "Number of articles from RTS portal:"]
-                   [:td (db/countArticlesFromPortal "Rts")]
-                   ]
-                  [:tr
-                   [:td "Number of TRUE articles (TRUE NEWS) :"]
-                   [:td (db/countTrueArticles)]
-                   ]
-                  [:tr
-                   [:td "Number of FALSE articles (FAKE NEWS) :"]
-                   [:td (db/countFakeArticles)]
-                   ]
-                  [:tr
-                   [:td "Portal with the most fake news:"]
-                   [:td (db/findMaxFake)]
-                   ]
-                  [:tr
-                   [:td "Portal with the most truthful news:"]
-                   [:td (db/findMaxTrue)]
-                   ]
-                  [:tr
-                   [:td "Number of reports to check:"]
-                   [:td (db/countReports)]
-                   ]
-                  ]]][:br][:br][:br]))
-
-;mac lentght for text of every articles shown on index page as preview
+;max lentght for text of every articles shown on index page as preview
 (def previewLengthForArticles 500)
 
 ;private function for trimming text used on index page for previewing articles
@@ -158,105 +52,53 @@ body
                          (subs text 0 previewLengthForArticles)
                          text))
 
-;index page which displays all articles using hiccup pages
+;index page for reader
 (defn indexReader [articles]
   (basePageTemplateReader
     [ :div.container.p-5.my-5.border
     [:h1 {:style "margin-left : 270px; color : red; font-family:georgia,garamond,serif;font-size:60px;font-style:italic;"} "Welcome to " [:strong "FakePolitics"] ]
     [:br]
-     [:p {:style "margin-left: 140px; color: #61C0DF;font-size:35px"} "We doubt and question for you. It's up to you to trust us."
-      ]
+     [:p {:style "margin-left: 140px; color: #61C0DF;font-size:35px"} "We doubt and question for you. It's up to you to trust us."]
      [:br]
-    [:img {:src "https://yaow.org/wp-content/uploads/2017/05/Newspaper.jpg" :style "width: 1250px; height: 500px; margin-left: 0px; "}]
-     ]
+    [:img {:src "https://yaow.org/wp-content/uploads/2017/05/Newspaper.jpg" :style "width: 1250px; height: 500px; margin-left: 0px; "}]]
                         (for [a articles]
                       [ :div.container.p-5.my-5.border
                        [:h2  (:title a)]
                        [:p (-> a :body trimText )]
-                       [:a.link {:href (str "/articlesReader/" (:_id a))}"Read more"]
-                       ]
-                      )))
-(defn indexAdmin [articles]
-  (basePageTemplateAdmin
-    [ :div.container.p-5.my-5.border
-     [:h1 {:style "margin-left : 270px; color : red; font-family:georgia,garamond,serif;font-size:60px;font-style:italic;"} "Welcome to " [:strong "FakePolitics"] ]
-     [:br]
-     [:p {:style "margin-left: 140px; color: #61C0DF;font-size:35px"} "We doubt and question for you. It's up to you to trust us."
-      ]
-     [:br]
-     [:img {:src "https://yaow.org/wp-content/uploads/2017/05/Newspaper.jpg" :style "width: 1250px; height: 500px; margin-left: 0px; "}]
-     ]
-    (for [a articles]
-      [ :div.container.p-5.my-5.border
-       [:h2  (:title a)]
-       [:p (-> a :body trimText )]
-       [:a.link {:href (str "/articlesAdmin/" (:_id a))}"Read more"]
-       ]
-      )))
+                       [:a.link {:href (str "/articlesReader/" (:_id a))}"Read more"]])))
 
-(defn onlyTrueNews [articles]   ;as paramether filtered list
+
+
+;display only true news, option for readers
+(defn onlyTrueNews [articles]
   (basePageTemplateReader [:br] [:h3 {:style "margin-left: 650px; color: #61C0DF;"} "True news"]
                     [ :div.container.p-5.my-5.border
                      [:p {:style "margin-left: 50px; color: #61C0DF;font-size:20px"} "This page contains news that our administrators have judged to be true. You can take a closer look at any article."
                       ]
                      [:br][:br]
-                     [:img {:src "https://activisthistory.files.wordpress.com/2017/10/truth-lies-500x300-copy.jpg?w=500&h=300&crop=1" :style "width: 1200px; height: 500px; margin-left: 0px; "}]
-                    ]
-
+                     [:img {:src "https://activisthistory.files.wordpress.com/2017/10/truth-lies-500x300-copy.jpg?w=500&h=300&crop=1" :style "width: 1200px; height: 500px; margin-left: 0px; "}]]
                     (for [a articles]
                        [ :div.container.p-5.my-5.border
                         [:h2 [:a {:href (str "/articlesReader/" (:_id a))} (:title a)]]
-                        [:p (-> a :body trimText )]
-                        ]
-                       )
-                     ))
+                        [:p (-> a :body trimText )]])))
 
-(defn onlyFakeNews [articles]                               ;as paramether filtered list
-  (basePageTemplateReader [:br] [:h3 {:style "margin-left: 650px; color: #61C0DF;"} "Fake news               " [:br]
-                     ]
+;display only fake news, option for readers
+(defn onlyFakeNews [articles]
+  (basePageTemplateReader [:br] [:h3 {:style "margin-left: 650px; color: #61C0DF;"} "Fake news               " [:br]]
                     [ :div.container.p-5.my-5.border
                      [:p {:style "margin-left: 50px; color: #61C0DF;font-size:20px"} "This page contains news that our administrators have judged to be fake.
-                     You can take a closer look at any article and also click on the button below to see what the fake news means and how to spot it."
-                      ]
+                     You can take a closer look at any article and also click on the button below to see what the fake news means and how to spot it."]
                       [:br][:br]
                     [:img {:src "https://www.coe.int/documents/11916313/24308513/fake-news-banner.jpg/a7c335de-7eee-4cf1-a6e9-cda44ec82fd2?t=1489763392000" :style "width: 1200px; height: 500px; margin-left: 0px; "}]
                      [:br][:br] [:small {:style "margin-left: 460px;" } [ :a.btn.btn-primary {:href  "https://www.youtube.com/watch?v=AkwWcHekMdo&list=PLkdPn_rERIsmV4jWxQlq_rN_XmezcKcur" :target "_blank"} "How to recognize fake news"]]]
-
-
                      (for [a articles]
                        [ :div.container.p-5.my-5.border
                         [:h2 [:a {:href (str "/articlesReader/" (:_id a))} (:title a)]]
-                        [:p (-> a :body trimText )]
-                        ]
-                       )))
+                        [:p (-> a :body trimText )]])))
 
 
-;Page for articles
-(defn articleAdmin [a]
-  (basePageTemplateAdmin
-    [ :div.container.p-5.my-5.border
-     (form/form-to [:delete (str "/articles/" (:_id a))]
 
-                   (anti-forgery-field)
-                   [:a.btn.btn-primary {:href (str "/articles/" (:_id a) "/edit")} "Edit"]
-                   (form/submit-button {:class "btn btn-danger"} "Delete"))
-                    [:small (:created a)]
-                    [:h1 (:title a)]
-                    [:p (:body a)]
-     (if (= (get a :author) "")
-       [:small (str "Author: unknown")]
-       [:small (str "Author: " (:author a)) ]
-      )
-     ;[:small (str "Author: " (:author a)) ]
-     [:br]
-     ;[:small ((db/findPortalById (:portal a)) :name)]
-     ;  [:small (str "Portal: " ((db/findPortalById (:portal a)) :name)) ]
-     [:small (str "Portal: " (:portal a)) ]
-     [:br]
-     [:small (str "Tag: " (:tag a)) ]
-     [:br]
-     ]
-    ))
+;Page for display specific article for readers with all comments for that article
 (defn articleReader [a  comments]
   (basePageTemplateReader
     [ :div.container.p-5.my-5.border
@@ -265,70 +107,20 @@ body
      [:p (:body a)]
      (if (= (get a :author) "")
        [:small (str "Author: unknown")]
-       [:small (str "Author: " (:author a)) ]
-       )
+       [:small (str "Author: " (:author a)) ])
      [:br]
-     ;[:small ((db/findPortalById (:portal a)) :name)]
-     ;  [:small (str "Portal: " ((db/findPortalById (:portal a)) :name)) ]
      [:small (str "Portal: " (:portal a)) ]
      [:br]
      [:small (str "Tag: " (:tag a)) ]
-     [:br]
-     ]
+     [:br]]
     [:div.container.p-5.my-5.border
-     ;comments
      [:h5 (str "Comments ") [:a.btn.btn-primary {:href (str "/comments/" (:_id a) "/newcomment")} "New comment"]]
-
      [:br]
-
      [:p  (for [c comments]
-            [:p (str "Reader " (get c :user) " write comment:   " (get c :text))]
-            )]]
-    ))
-;Some repl testing
-;(get (into [] (for [c (alati.db/findCommentsByArticleId "61c0955dbc538430a4acda76")]
-;       ( str "Reader:" (get c :user )" write comment: " (get c :text) ))) 0)
-;=> "Reader:Nikolina Maric write comment: I don't like this post"
-
-;(for [c (alati.db/findCommentsByArticleId "61c0955dbc538430a4acda76")]
-;  ( str "Reader:" (get c :user )" write comment: " (get c :text) ))
-;=> ("Reader:Nikolina Maric write comment: I don't like this post" "Reader:Maja Nikolic write comment: I like this post")
+            [:p (str "Reader " (get c :user) " write comment:   " (get c :text))])]]))
 
 
-;Edit article or create an article if doesn't exist
-(defn editArticle [a]
-  (basePageTemplateAdmin [:br] [:h3 {:style "margin-left: 600px; color: #61C0DF;"} "Article information"]
-    (form/form-to
-      [:post (if a
-               (str "/articlesAdmin/" (:_id a))
-               "/articles")]
-
-      [:div.container.p-5.my-5.border
-       (form/label "title" "Title")
-       (form/text-field {:class "form-control"} "title" (:title a))
-       [:br]
-
-       (form/label "body" "Body")
-       (form/text-area {:class "form-control"} "body" (:body a))
-       (form/label "author" "Author")
-       (form/text-area {:class "form-control"} "author" (:author a))
-       [:br]
-       (form/label "portal" "Portal")
-
-       (form/drop-down {:class "form-control"} "portal" (into [] (for [p (alati.db/returnAllPortals)]
-                                                                   (get p :name ) )))
-       ;(form/text-area {:class "form-control"} "portal" (:portal a))
-       ;(form/text-area {:class "form-control"}  "portal" ((db/findPortalById (:portal a)) :name))
-       [:br]
-       (form/label "tag" "Tag")
-       (form/drop-down {:class "form-control"} "tag" [["True" "true"] ["False" "false"]] (:tag a))
-       [:br]
-       [:br]
-       (anti-forgery-field)
-       (form/submit-button {:class "btn btn-primary"} "Save")]
-      )
-    )
-  )
+;Page for reporting fake news by readers
 (defn reportfakenews [a]
   (basePageTemplateReader
     (form/form-to
@@ -345,15 +137,13 @@ body
       [:h3 "Misinformation and Disinformation (other types of \"fake news\")"]
       [:p "The universe of “fake news” is much larger than simply false news stories. Some stories may have a nugget of truth, but lack any contextualizing details. They may not include any verifiable facts or sources. Some stories may include basic verifiable facts, but are written using language that is deliberately inflammatory, leaves out pertinent details or only presents one viewpoint. \"Fake news\" exists within a larger ecosystem of mis- and disinformation. \n\nMisinformation is false or inaccurate information that is mistakenly or inadvertently created or spread; the intent is not to deceive. Disinformation is false information that is deliberately created and spread \"in order to influence public opinion or obscure the truth\" (https://www.merriam-webster.com/dictionary/disinformation). \n\nClaire Wardle of FirstDraftNews.com has created the helpful visual image below to help us think about the ecosystem of mis- and disinformation. And as she points out, \"it's complicated.\""]
        [:img {:alt "7 types of mis/disinformation" :src "https://firstdraftnews.com/wp-content/uploads/2017/02/FDN_7Types_Misinfo-01-1024x576.jpg?x40896" :style "width: 1200px; height: 600px;"}]
-      [:small "Source: " [:a.link {:href "https://guides.lib.umich.edu/fakenews" :target "_blank" }"Read article"]]
-       ]
+      [:small "Source: " [:a.link {:href "https://guides.lib.umich.edu/fakenews" :target "_blank" }"Read article"]]]
        [:div.container.p-5.my-5.border
         [:h3 {:style "margin-left: 550px; color: #61C0DF;"}  "Report form"]
         [:br]
            (form/label "link" "Site url")
           (form/text-field {:type "url":class "form-control"} "link" (:link a))
        [:br]
-
        (form/label "reason" "Reason for reporting")
        (form/text-area { :class "form-control"} "reason" (:reason a))
         [:br]
@@ -364,67 +154,13 @@ body
        (form/drop-down {:class "form-control"} "portal" (into [] (for [p (alati.db/returnAllPortals)]
                                                                    (get p :name ) )))
        [:br]
-
        (anti-forgery-field)
-       (form/submit-button {:class "btn btn-primary"} "Report")]
-      )
-    )
-  )
+       (form/submit-button {:class "btn btn-primary"} "Report")])))
 
-(defn displayReported [reported]
-  (basePageTemplateAdmin
-    [:br]
-    [:h3 {:style "margin-left: 600px; color: #61C0DF;"} "Reports from readers"]
-    [:small {:style "margin-left: 690px; color: #61C0DF;"} (str "Count: " (db/countReports))]
- [:br]
 
-    [:style "#report {
-    table-layout: fixed;
-      width: 1400px;
-       font-family: Arial, Helvetica, sans-serif;
-       border-collapse: collapse;
 
-}
-
-          #report td, #report th {
-            border: 1px solid #ddd;
-            padding: 8px;
-          }
-
-        #report tr:nth-child(even){background-color: #f2f2f2;}
-
-        #report tr:hover {background-color: #ddd;}
-
-        #report th {
-          padding-top: 12px;
-          padding-bottom: 12px;
-          text-align: left;
-          background-color: #61C0DF;
-          color: white;
-        }"]
-    [:div {:style "margin-left:30px" "margin-bottom:30px" "margin-right:60px"}
-    [:body  [:br] (for [r reported] [:table#report
-                                                                       [:tr
-                                                                        [:th "Link"]
-                                                                        [:th "Reason"]
-                                                                        [:th "Author"]
-                                                                        [:th "Portal"]
-                                                                        [:th "Action"]]
-                                                                       [:tr
-                                                                        [:td  (if (= nil (:link r)) "No information about article" [:a.link {:href (:link r) :target "_blank" }
-                                                                               "Reported article"])]
-                                                                        [:td (:reason r)]
-                                                                        [:td (:author r)]
-                                                                        [:td (:portal r)]
-                                                                        [:td (form/submit-button {:class "btn btn-danger"} "Reject")
-                                                                         ]
-                                                                        ]
-                                                                      ] ) ]]
-    [:br]
-    [:br]
-   ))
-
-(defn addComment [c article-id]                                        ; i need for which article
+;Page for adding comments to the article, option for readers of blog
+(defn addComment [c article-id]
   (basePageTemplateReader
     (form/form-to
       [:post (if article-id
@@ -443,37 +179,9 @@ body
     )
   )
 
-;Login page
-(defn adminLogin [ & [message]]
-  (basePageTemplateReader
-    (when message [:div.alert.alert-danger message])
-    (form/form-to
-      [:post "/admin/login"]
 
-
-      [:div.container.p-5.my-5.border
-       [:label.form-label {:for "email"} "Email:"]
-       [:input#email.form-control {:type "username" :placeholder "Enter username" :name "username"}]
-       [:label.form-label {:for "pwd"} "Password:"]
-       [:input#pwd.form-control {:type "password" :placeholder "Enter password" :name "password"}]
-       [:div.form-check.mb-3
-        [:label.form-check-label
-         [:input.form-check-input {:type "checkbox" :name "remember"}] "Remember me"]]
-       (anti-forgery-field)
-       (form/submit-button {:class "btn btn-primary"}  "Login")]
-)))
-;(defn filterByPortals [portals]
-;  (basePageTemplate     [:h3 {:style "margin: 35px; color: #61C0DF;"} "Filter articles by portal"]
-;                    (form/form-to
-;                      [:div.container.p-5.my-5.border
-;                       [:br]
-;                       (form/label "portal" "Portal")
-;
-;                       (form/drop-down {:class "form-control"} "portal" (into [] (for [p portals]
-;                                                                                   (get p :name ) )))])))
-
-
-(defn articlesForPortal [articles portal]                          ;fine
+;Display all articles for specific portal, option for readers
+(defn articlesForPortal [articles portal]
   (basePageTemplateReader
     [:br] [:h3 {:style "margin-left: 600px; color: #61C0DF;"} (str "Articles from " portal )]
     (if (= portal "Blic")
@@ -500,8 +208,21 @@ body
       [ :div.container.p-5.my-5.border
        [:h2  (:title a)]
        [:p (-> a :body trimText )]
-       [:a.link {:href (str "/articles/" (:_id a))}"Read more"]
-       ]
-      )))
+       [:a.link {:href (str "/articles/" (:_id a))}"Read more"]])))
 
-
+;Login page for admin
+(defn adminLogin [ & [message]]
+  (basePageTemplateReader
+    (when message [:div.alert.alert-danger message])
+    (form/form-to
+      [:post "/admin/login"]
+      [:div.container.p-5.my-5.border
+       [:label.form-label {:for "email"} "Email:"]
+       [:input#email.form-control {:type "username" :placeholder "Enter username" :name "username"}]
+       [:label.form-label {:for "pwd"} "Password:"]
+       [:input#pwd.form-control {:type "password" :placeholder "Enter password" :name "password"}]
+       [:div.form-check.mb-3
+        [:label.form-check-label
+         [:input.form-check-input {:type "checkbox" :name "remember"}] "Remember me"]]
+       (anti-forgery-field)
+       (form/submit-button {:class "btn btn-primary"}  "Login")])))
