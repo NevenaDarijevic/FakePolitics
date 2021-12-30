@@ -226,6 +226,7 @@
                         [:td (if (= "" (:reason r)){:style "color:red"}) (if (= "" (:reason r) ) "No information about reason" (:reason r))]
                         [:td (if (= "" (:author r)){:style "color:red"}) (if (= "" (:author r)) "No information about author"(:author r))]
                         [:td (:portal r)]
+                        (anti-forgery-field)
                         [:td (form/submit-button {:class "btn btn-danger"} "Reject")]])] ) ]]
     [:br]
     [:br]))
